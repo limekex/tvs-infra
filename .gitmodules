@@ -1,0 +1,6 @@
+[submodule "wp-content/plugins/tvs-virtual-sports"]
+	path = wp-content/plugins/tvs-virtual-sports
+	url = https://github.com/limekex/tvs-virtual-sports
+[submodule "wp-content/themes/tvs-theme"]
+	path = wp-content/themes/tvs-theme
+	url = https://github.com/limekex/tvs-theme
