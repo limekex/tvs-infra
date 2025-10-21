@@ -21,6 +21,7 @@ jobs:
 
       - name: Prepare clean workdir
         run: |
+          set -euo pipefail
           rm -rf /tmp/flatten
           mkdir -p /tmp/flatten
 
@@ -32,16 +33,15 @@ jobs:
 
       - name: Replace submodules with actual contents
         run: |
-          # Her forutsetter vi submodules på disse stiene:
+          set -euo pipefail
+          # Forutsetter submodules på disse stiene:
           #   wp-content/plugins/tvs-virtual-sports
           #   wp-content/themes/tvs-theme
-          # Siden vi sjekket ut med submodules: mappene er allerede fylt.
 
-          # Valgfritt: sørg for at målmappene finnes
           mkdir -p /tmp/flatten/wp-content/plugins/tvs-virtual-sports
           mkdir -p /tmp/flatten/wp-content/themes/tvs-theme
 
-          # Rsync (med --delete for å fjerne gamle filer ved oppdatering)
+          # Kopiér innholdet (uten .git) fra submodulene
           rsync -a --delete --exclude '.git' \
             ./wp-content/plugins/tvs-virtual-sports/ \
             /tmp/flatten/wp-content/plugins/tvs-virtual-sports/
@@ -55,13 +55,12 @@ jobs:
 
       - name: Optionally prune noise
         run: |
-          # Du kan fjerne tunge/uinteressante kataloger fra flattened-grenen
-          # slik at Codex indekserer det som faktisk er relevant.
-          # Eksempler (justér etter behov):
+          set -euo pipefail
+          # Fjern tunge/irrelevante kataloger for å gjøre indeksering enklere
           find /tmp/flatten -type d -name "node_modules" -prune -exec rm -rf {} + || true
           rm -rf /tmp/flatten/logs || true
 
-            - name: Commit & Force-push to 'flattened' branch
+      - name: Commit & Force-push to 'flattened' branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -69,16 +68,21 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp/flatten
+
           git init
           git config user.name "TVS Infra Build Bot"
           git config user.email "ci@virtualsports.online"
+
           git add .
           git commit -m "chore: flattened tree for Codex/Copilot @ $SHA"
           git branch -M flattened
-          # Viktig: bruk token i remote-URL. Ikke logg token i klartekst.
+
+          # Viktig: bruk token i remote-URL
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
-          # Verifiser uten å eksponere token
+
+          # Vis remote uten å eksponere token
           git remote -v | sed 's/x-access-token:.*@/x-access-token:***@/g'
+
           git push -f origin flattened
 
       - name: Summary
