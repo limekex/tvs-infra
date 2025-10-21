@@ -1,7 +1,7 @@
-version: "3.8"
 services:
   db:
     image: mariadb:10.6
+    restart: always
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
@@ -16,8 +16,12 @@ services:
 
   wordpress:
     image: wordpress:6.6-php8.2-apache
+    #image: ghcr.io/docker-library/wordpress:6.6-php8.2-apache
+    #image: bitnami/wordpress:6.6.2
+    restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8080:80"
     environment:
@@ -25,15 +29,15 @@ services:
       WORDPRESS_DB_USER: ${DB_USER}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       WORDPRESS_DB_NAME: ${DB_NAME}
-      WP_ENV: ${WP_ENV}
-      # Enable debug in the running wordpress (web) container so PHP/WordPress
-      # errors are written when serving pages
+      ALLOW_EMPTY_PASSWORD: "yes"
       WP_DEBUG: 1
       WP_DEBUG_LOG: /var/www/html/wp-content/logs/php-errors.log
       WP_DEBUG_DISPLAY: 1
       WP_DISABLE_FATAL_ERROR_HANDLER: 1
     volumes:
-      - wp_html:/var/www/html
+      # Kjernen ligger i dette volume
+      - wordpress_data:/var/www/html
+      # Mount kun ditt tema og din plugin
       - ./wp-content/themes/tvs-theme:/var/www/html/wp-content/themes/tvs-theme
       - ./wp-content/plugins/tvs-virtual-sports:/var/www/html/wp-content/plugins/tvs-virtual-sports
       - ./logs:/var/www/html/wp-content/logs
@@ -44,25 +48,22 @@ services:
       - db
       - wordpress
     working_dir: /var/www/html
+    entrypoint: ["wp"]
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: ${DB_USER}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
       WORDPRESS_DB_NAME: ${DB_NAME}
-      WP_ENV: ${WP_ENV}
       WP_DEBUG: 1
-      # Keep same debug log path as the web container so logs are collected
       WP_DEBUG_LOG: /var/www/html/wp-content/logs/php-errors.log
       WP_DEBUG_DISPLAY: 1
-      WP_DISABLE_FATAL_ERROR_HANDLER: 1
     volumes:
-      - wp_html:/var/www/html
+      - wordpress_data:/var/www/html
       - ./wp-content/themes/tvs-theme:/var/www/html/wp-content/themes/tvs-theme
       - ./wp-content/plugins/tvs-virtual-sports:/var/www/html/wp-content/plugins/tvs-virtual-sports
-      - ./scripts:/scripts
       - ./logs:/var/www/html/wp-content/logs
-    entrypoint: wp
+      - ./scripts:/scripts
 
 volumes:
   db_data:
-  wp_html:
+  wordpress_data:
