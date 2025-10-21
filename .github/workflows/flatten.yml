@@ -62,6 +62,10 @@ jobs:
           rm -rf /tmp/flatten/logs || true
 
       - name: Commit & Force-push to 'flattened' branch
+        env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            REPO: ${{ github.repository }}
+            SHA: ${{ github.sha }}
         run: |
           cd /tmp/flatten
           git init
@@ -77,4 +81,3 @@ jobs:
       - name: Summary
         run: |
           echo "Flattened branch published."
-            
