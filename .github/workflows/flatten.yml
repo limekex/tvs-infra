@@ -61,21 +61,24 @@ jobs:
           find /tmp/flatten -type d -name "node_modules" -prune -exec rm -rf {} + || true
           rm -rf /tmp/flatten/logs || true
 
-      - name: Commit & Force-push to 'flattened' branch
+            - name: Commit & Force-push to 'flattened' branch
         env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            REPO: ${{ github.repository }}
-            SHA: ${{ github.sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
+          set -euo pipefail
           cd /tmp/flatten
           git init
-          git config user.name "tvs-bot"
-          git config user.email "tvs-bot@users.noreply.github.com"
+          git config user.name "TVS Infra Build Bot"
+          git config user.email "ci@virtualsports.online"
           git add .
-          git commit -m "chore: flattened tree for Codex/Copilot"
+          git commit -m "chore: flattened tree for Codex/Copilot @ $SHA"
           git branch -M flattened
-          git remote add origin "${{ github.server_url }}/${{ github.repository }}.git"
-          # Force-push for å alltid erstatte flattened med nyeste view
+          # Viktig: bruk token i remote-URL. Ikke logg token i klartekst.
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+          # Verifiser uten å eksponere token
+          git remote -v | sed 's/x-access-token:.*@/x-access-token:***@/g'
           git push -f origin flattened
 
       - name: Summary
