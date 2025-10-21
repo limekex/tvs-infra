@@ -1,0 +1,80 @@
+name: Publish flattened tree (no submodules)
+
+on:
+  push:
+    branches: [ main ]   # endre hvis dere bruker en annen primærgren
+  workflow_dispatch:
+
+permissions:
+  contents: write   # trengs for å pushe til repoet
+
+jobs:
+  flatten:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Prepare clean workdir
+        run: |
+          rm -rf /tmp/flatten
+          mkdir -p /tmp/flatten
+
+          # Kopiér hele infra-repoet, men dropp git-metadata
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github/workflows/flatten.yml' \
+            ./ /tmp/flatten/
+
+      - name: Replace submodules with actual contents
+        run: |
+          # Her forutsetter vi submodules på disse stiene:
+          #   wp-content/plugins/tvs-virtual-sports
+          #   wp-content/themes/tvs-theme
+          # Siden vi sjekket ut med submodules: mappene er allerede fylt.
+
+          # Valgfritt: sørg for at målmappene finnes
+          mkdir -p /tmp/flatten/wp-content/plugins/tvs-virtual-sports
+          mkdir -p /tmp/flatten/wp-content/themes/tvs-theme
+
+          # Rsync (med --delete for å fjerne gamle filer ved oppdatering)
+          rsync -a --delete --exclude '.git' \
+            ./wp-content/plugins/tvs-virtual-sports/ \
+            /tmp/flatten/wp-content/plugins/tvs-virtual-sports/
+
+          rsync -a --delete --exclude '.git' \
+            ./wp-content/themes/tvs-theme/ \
+            /tmp/flatten/wp-content/themes/tvs-theme/
+
+          # Fjern submodule-metadata i flattened tree
+          rm -f /tmp/flatten/.gitmodules || true
+
+      - name: Optionally prune noise
+        run: |
+          # Du kan fjerne tunge/uinteressante kataloger fra flattened-grenen
+          # slik at Codex indekserer det som faktisk er relevant.
+          # Eksempler (justér etter behov):
+          find /tmp/flatten -type d -name "node_modules" -prune -exec rm -rf {} + || true
+          rm -rf /tmp/flatten/logs || true
+
+      - name: Commit & Force-push to 'flattened' branch
+        run: |
+          cd /tmp/flatten
+          git init
+          git config user.name "tvs-bot"
+          git config user.email "tvs-bot@users.noreply.github.com"
+          git add .
+          git commit -m "chore: flattened tree for Codex/Copilot"
+          git branch -M flattened
+          git remote add origin "${{ github.server_url }}/${{ github.repository }}.git"
+          # Force-push for å alltid erstatte flattened med nyeste view
+          git push -f origin flattened
+
+      - name: Summary
+        run: |
+          echo "Flattened branch published."
+            
