@@ -13,11 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (with submodules)
+      - name: Checkout (with submodules, no persisted creds)
         uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
+          persist-credentials: false   # <-- viktig: ikke skriv inn egne creds i repoet
 
       - name: Prepare clean workdir
         run: |
@@ -34,14 +35,9 @@ jobs:
       - name: Replace submodules with actual contents
         run: |
           set -euo pipefail
-          # Forutsetter submodules på disse stiene:
-          #   wp-content/plugins/tvs-virtual-sports
-          #   wp-content/themes/tvs-theme
-
           mkdir -p /tmp/flatten/wp-content/plugins/tvs-virtual-sports
           mkdir -p /tmp/flatten/wp-content/themes/tvs-theme
 
-          # Kopiér innholdet (uten .git) fra submodulene
           rsync -a --delete --exclude '.git' \
             ./wp-content/plugins/tvs-virtual-sports/ \
             /tmp/flatten/wp-content/plugins/tvs-virtual-sports/
@@ -50,19 +46,18 @@ jobs:
             ./wp-content/themes/tvs-theme/ \
             /tmp/flatten/wp-content/themes/tvs-theme/
 
-          # Fjern submodule-metadata i flattened tree
           rm -f /tmp/flatten/.gitmodules || true
 
       - name: Optionally prune noise
         run: |
           set -euo pipefail
-          # Fjern tunge/irrelevante kataloger for å gjøre indeksering enklere
           find /tmp/flatten -type d -name "node_modules" -prune -exec rm -rf {} + || true
           rm -rf /tmp/flatten/logs || true
 
       - name: Commit & Force-push to 'flattened' branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_ACTOR: ${{ github.actor }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
         run: |
@@ -73,11 +68,14 @@ jobs:
           git config user.name "TVS Infra Build Bot"
           git config user.email "ci@virtualsports.online"
 
+          # Global fallback: alle https://github.com/... vil bruke token automatisk
+          git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+
           git add .
-          git commit -m "chore: flattened tree for Codex/Copilot @ $SHA"
+          git commit -m "chore: flattened tree for Codex/Copilot @ ${SHA}"
           git branch -M flattened
 
-          # Viktig: bruk token i remote-URL
+          # Eksplicit remote med token (belt & bukseseler)
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
 
           # Vis remote uten å eksponere token
