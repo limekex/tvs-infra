@@ -65,5 +65,8 @@ cli-shell:
 tunnel:
 	cloudflared tunnel --url http://localhost:8080
 
+runnerrun:
+	cloudflared tunnel run 
+
 status:
 	docker compose ps
