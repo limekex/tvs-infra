@@ -29,6 +29,7 @@ yarn-error.log*
 out/
 package-lock.json
 yarn.lock
+.phpunit.result.cache
 
 # Python
 __pycache__/
