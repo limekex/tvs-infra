@@ -17,6 +17,7 @@ Thumbs.db:encryptable
 .idea/
 .vendor/
 vendor/
+**/tests/
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
