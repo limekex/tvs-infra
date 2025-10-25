@@ -33,6 +33,7 @@ out/
 package-lock.json
 package-lock 2.json
 yarn.lock
+.phpunit.result.cache
 
 # Python
 __pycache__/
