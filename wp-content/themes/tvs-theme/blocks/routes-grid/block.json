@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tvs/routes-grid",
+  "title": "Routes Grid",
+  "category": "widgets",
+  "icon": "grid-view",
+  "description": "Displays available virtual routes.",
+  "editorScript": "file:./src/index.js",
+  "style": "file:./style.css",
+  "render": "file:./render.php",
+  "supports": { "align": ["wide", "full"] },
+  "attributes": {
+    "perPage": { "type": "number", "default": 9 }
+  }
+}
