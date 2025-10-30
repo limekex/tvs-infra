@@ -43,7 +43,7 @@ activate:
 	docker compose run --rm cli wp theme activate tvs-theme || true
 
 seed:
-	docker compose run --rm cli wp eval-file /scripts/seed.php || true
+	docker compose run --rm cli eval-file /scripts/seed.php || true
 
 # -----------------------------
 # WP utility commands
