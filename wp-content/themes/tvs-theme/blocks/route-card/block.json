@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tvs/route-card",
+  "title": "Route Card",
+  "category": "widgets",
+  "icon": "location",
+  "editorScript": "file:./src/index.js",
+  "style": "file:./style.css",
+  "attributes": {
+    "routeId": { "type": "number" }
+  }
+}

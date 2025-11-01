@@ -1,0 +1,33 @@
+.tvs-routes-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: var(--tvs-space-6);
+	margin-top: var(--tvs-space-8);
+}
+
+.tvs-route-card {
+	background: var(--tvs-card-bg);
+	border: 1px solid var(--tvs-card-border);
+	border-radius: var(--tvs-card-radius);
+	padding: var(--tvs-card-padding);
+	box-shadow: var(--tvs-card-shadow);
+	transition: var(--tvs-transition-transform), var(--tvs-transition-shadow);
+}
+
+.tvs-route-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--tvs-card-shadow-hover);
+}
+
+.tvs-route-card h3 {
+	margin-top: 0;
+	margin-bottom: var(--tvs-space-2);
+	font-size: var(--tvs-text-xl);
+	color: var(--tvs-color-text-primary);
+}
+
+.tvs-route-card .route-meta {
+	color: var(--tvs-color-text-secondary);
+	font-size: var(--tvs-text-sm);
+	margin: 0;
+}

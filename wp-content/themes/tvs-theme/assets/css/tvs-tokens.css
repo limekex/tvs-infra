@@ -1,0 +1,383 @@
+/**
+ * TVS Design Tokens
+ * Global design system for Norway Virtual Sport theme
+ * Mobile-first, dark theme with neon/gradient accents
+ * 
+ * Usage: These CSS custom properties are available globally
+ * and should be used throughout the theme for consistency.
+ */
+
+:root {
+  /* ========================================
+     COLOR PALETTE - Dark Theme
+     ======================================== */
+  
+  /* Primary Dark Backgrounds */
+  --tvs-color-bg-primary: #0a0a0b;
+  --tvs-color-bg-secondary: #16171a;
+  --tvs-color-bg-tertiary: #1e2023;
+  --tvs-color-bg-elevated: #252729;
+  
+  /* Surface Colors (for cards, panels) */
+  --tvs-color-surface-base: #1a1b1e;
+  --tvs-color-surface-raised: #242529;
+  --tvs-color-surface-overlay: #2d2e33;
+  
+  /* Neon Accent Colors */
+  --tvs-color-neon-cyan: #00ffff;
+  --tvs-color-neon-magenta: #ff00ff;
+  --tvs-color-neon-lime: #ccff00;
+  --tvs-color-neon-orange: #ff6b35;
+  
+  /* Primary Brand Colors */
+  --tvs-color-primary: #4aa6e0;
+  --tvs-color-primary-light: #6bc1f0;
+  --tvs-color-primary-dark: #2a86c0;
+  
+  /* Accent Colors */
+  --tvs-color-accent: #00d9ff;
+  --tvs-color-accent-warm: #ff6b9d;
+  --tvs-color-success: #2ecc71;
+  --tvs-color-warning: #f39c12;
+  --tvs-color-error: #e74c3c;
+  
+  /* Gradient Definitions */
+  --tvs-gradient-primary: linear-gradient(135deg, #4aa6e0 0%, #00d9ff 100%);
+  --tvs-gradient-neon: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ccff00 100%);
+  --tvs-gradient-warm: linear-gradient(135deg, #ff6b35 0%, #ff6b9d 100%);
+  --tvs-gradient-subtle: linear-gradient(135deg, #1e2023 0%, #252729 100%);
+  
+  /* Text Colors (AA Contrast Compliant) */
+  --tvs-color-text-primary: #ffffff;
+  --tvs-color-text-secondary: #b8b9bc;
+  --tvs-color-text-tertiary: #7a7b7e;
+  --tvs-color-text-disabled: #4a4b4e;
+  --tvs-color-text-on-primary: #ffffff;
+  --tvs-color-text-on-accent: #0a0a0b;
+  
+  /* Border Colors */
+  --tvs-color-border-subtle: #2d2e33;
+  --tvs-color-border-default: #3a3b40;
+  --tvs-color-border-strong: #4a4b50;
+  --tvs-color-border-accent: #4aa6e0;
+  
+  /* Glass/Blur Effects */
+  --tvs-color-glass-light: rgba(255, 255, 255, 0.05);
+  --tvs-color-glass-medium: rgba(255, 255, 255, 0.08);
+  --tvs-color-glass-strong: rgba(255, 255, 255, 0.12);
+  --tvs-color-glass-dark: rgba(0, 0, 0, 0.3);
+  
+  /* Overlay Colors */
+  --tvs-color-overlay-light: rgba(10, 10, 11, 0.5);
+  --tvs-color-overlay-medium: rgba(10, 10, 11, 0.7);
+  --tvs-color-overlay-heavy: rgba(10, 10, 11, 0.85);
+  
+  
+  /* ========================================
+     SPACING SCALE
+     ======================================== */
+  
+  --tvs-space-0: 0;
+  --tvs-space-1: 0.25rem;   /* 4px */
+  --tvs-space-2: 0.5rem;    /* 8px */
+  --tvs-space-3: 0.75rem;   /* 12px */
+  --tvs-space-4: 1rem;      /* 16px */
+  --tvs-space-5: 1.25rem;   /* 20px */
+  --tvs-space-6: 1.5rem;    /* 24px */
+  --tvs-space-8: 2rem;      /* 32px */
+  --tvs-space-10: 2.5rem;   /* 40px */
+  --tvs-space-12: 3rem;     /* 48px */
+  --tvs-space-16: 4rem;     /* 64px */
+  --tvs-space-20: 5rem;     /* 80px */
+  --tvs-space-24: 6rem;     /* 96px */
+  
+  
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  
+  --tvs-radius-none: 0;
+  --tvs-radius-sm: 0.375rem;    /* 6px - small elements */
+  --tvs-radius-md: 0.5rem;      /* 8px - buttons, inputs */
+  --tvs-radius-lg: 0.75rem;     /* 12px - cards */
+  --tvs-radius-xl: 1rem;        /* 16px - large cards */
+  --tvs-radius-2xl: 1.5rem;     /* 24px - hero elements */
+  --tvs-radius-full: 9999px;    /* pills, badges */
+  
+  
+  /* ========================================
+     Z-INDEX LAYERS
+     ======================================== */
+  
+  --tvs-z-base: 0;
+  --tvs-z-dropdown: 1000;
+  --tvs-z-sticky: 1100;
+  --tvs-z-fixed: 1200;
+  --tvs-z-modal-backdrop: 1300;
+  --tvs-z-modal: 1400;
+  --tvs-z-popover: 1500;
+  --tvs-z-tooltip: 1600;
+  --tvs-z-notification: 1700;
+  
+  
+  /* ========================================
+     SHADOWS
+     ======================================== */
+  
+  /* Subtle Shadows */
+  --tvs-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --tvs-shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+  --tvs-shadow-md: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+  --tvs-shadow-lg: 0 8px 16px 0 rgba(0, 0, 0, 0.6);
+  --tvs-shadow-xl: 0 12px 24px 0 rgba(0, 0, 0, 0.7);
+  --tvs-shadow-2xl: 0 16px 48px 0 rgba(0, 0, 0, 0.8);
+  
+  /* Glow/Neon Shadows */
+  --tvs-shadow-glow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
+  --tvs-shadow-glow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
+  --tvs-shadow-glow-primary: 0 0 20px rgba(74, 166, 224, 0.4);
+  --tvs-shadow-glow-accent: 0 0 20px rgba(0, 217, 255, 0.4);
+  
+  /* Inner Shadows (for depth) */
+  --tvs-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+  --tvs-shadow-inner-lg: inset 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+  
+  
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  
+  /* Font Families */
+  --tvs-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --tvs-font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  
+  /* Font Sizes */
+  --tvs-text-xs: 0.75rem;      /* 12px */
+  --tvs-text-sm: 0.875rem;     /* 14px */
+  --tvs-text-base: 1rem;       /* 16px */
+  --tvs-text-lg: 1.125rem;     /* 18px */
+  --tvs-text-xl: 1.25rem;      /* 20px */
+  --tvs-text-2xl: 1.5rem;      /* 24px */
+  --tvs-text-3xl: 1.875rem;    /* 30px */
+  --tvs-text-4xl: 2.25rem;     /* 36px */
+  --tvs-text-5xl: 3rem;        /* 48px */
+  --tvs-text-6xl: 3.75rem;     /* 60px */
+  
+  /* Font Weights */
+  --tvs-font-light: 300;
+  --tvs-font-normal: 400;
+  --tvs-font-medium: 500;
+  --tvs-font-semibold: 600;
+  --tvs-font-bold: 700;
+  --tvs-font-extrabold: 800;
+  
+  /* Line Heights */
+  --tvs-leading-none: 1;
+  --tvs-leading-tight: 1.25;
+  --tvs-leading-snug: 1.375;
+  --tvs-leading-normal: 1.5;
+  --tvs-leading-relaxed: 1.625;
+  --tvs-leading-loose: 2;
+  
+  /* Letter Spacing */
+  --tvs-tracking-tighter: -0.05em;
+  --tvs-tracking-tight: -0.025em;
+  --tvs-tracking-normal: 0;
+  --tvs-tracking-wide: 0.025em;
+  --tvs-tracking-wider: 0.05em;
+  --tvs-tracking-widest: 0.1em;
+  
+  
+  /* ========================================
+     TRANSITIONS & ANIMATIONS
+     ======================================== */
+  
+  /* Duration */
+  --tvs-duration-instant: 50ms;
+  --tvs-duration-fast: 150ms;
+  --tvs-duration-normal: 250ms;
+  --tvs-duration-slow: 350ms;
+  --tvs-duration-slower: 500ms;
+  
+  /* Easing Functions */
+  --tvs-ease-linear: linear;
+  --tvs-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --tvs-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --tvs-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --tvs-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Common Transitions */
+  --tvs-transition-colors: color var(--tvs-duration-normal) var(--tvs-ease-out),
+                           background-color var(--tvs-duration-normal) var(--tvs-ease-out),
+                           border-color var(--tvs-duration-normal) var(--tvs-ease-out);
+  --tvs-transition-transform: transform var(--tvs-duration-normal) var(--tvs-ease-out);
+  --tvs-transition-opacity: opacity var(--tvs-duration-normal) var(--tvs-ease-out);
+  --tvs-transition-shadow: box-shadow var(--tvs-duration-normal) var(--tvs-ease-out);
+  --tvs-transition-all: all var(--tvs-duration-normal) var(--tvs-ease-out);
+  
+  
+  /* ========================================
+     BLUR EFFECTS
+     ======================================== */
+  
+  --tvs-blur-none: 0;
+  --tvs-blur-sm: 4px;
+  --tvs-blur-md: 8px;
+  --tvs-blur-lg: 16px;
+  --tvs-blur-xl: 24px;
+  --tvs-blur-2xl: 40px;
+  
+  
+  /* ========================================
+     COMPONENT-SPECIFIC TOKENS
+     ======================================== */
+  
+  /* Cards */
+  --tvs-card-bg: var(--tvs-color-surface-base);
+  --tvs-card-border: var(--tvs-color-border-subtle);
+  --tvs-card-radius: var(--tvs-radius-lg);
+  --tvs-card-padding: var(--tvs-space-6);
+  --tvs-card-shadow: var(--tvs-shadow-md);
+  --tvs-card-shadow-hover: var(--tvs-shadow-lg);
+  
+  /* Buttons */
+  --tvs-button-radius: var(--tvs-radius-md);
+  --tvs-button-padding-x: var(--tvs-space-6);
+  --tvs-button-padding-y: var(--tvs-space-3);
+  --tvs-button-font-size: var(--tvs-text-base);
+  --tvs-button-font-weight: var(--tvs-font-medium);
+  
+  /* Badges & Chips */
+  --tvs-badge-radius: var(--tvs-radius-full);
+  --tvs-badge-padding-x: var(--tvs-space-3);
+  --tvs-badge-padding-y: var(--tvs-space-1);
+  --tvs-badge-font-size: var(--tvs-text-xs);
+  --tvs-badge-font-weight: var(--tvs-font-semibold);
+  
+  /* Input Fields */
+  --tvs-input-bg: var(--tvs-color-bg-elevated);
+  --tvs-input-border: var(--tvs-color-border-default);
+  --tvs-input-radius: var(--tvs-radius-md);
+  --tvs-input-padding-x: var(--tvs-space-4);
+  --tvs-input-padding-y: var(--tvs-space-3);
+  
+  /* Panels */
+  --tvs-panel-bg: var(--tvs-color-surface-raised);
+  --tvs-panel-border: var(--tvs-color-border-subtle);
+  --tvs-panel-radius: var(--tvs-radius-xl);
+  --tvs-panel-padding: var(--tvs-space-8);
+  
+  /* Glass Effect (glassmorphism) */
+  --tvs-glass-bg: var(--tvs-color-glass-medium);
+  --tvs-glass-border: var(--tvs-color-glass-light);
+  --tvs-glass-blur: var(--tvs-blur-lg);
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+body {
+  background-color: var(--tvs-color-bg-primary);
+  color: var(--tvs-color-text-primary);
+  font-family: var(--tvs-font-sans);
+  font-size: var(--tvs-text-base);
+  line-height: var(--tvs-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Glass/Blur Effect */
+.tvs-glass {
+  background: var(--tvs-glass-bg);
+  backdrop-filter: blur(var(--tvs-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tvs-glass-blur));
+  border: 1px solid var(--tvs-glass-border);
+}
+
+/* Gradient Backgrounds */
+.tvs-gradient-primary {
+  background: var(--tvs-gradient-primary);
+}
+
+.tvs-gradient-neon {
+  background: var(--tvs-gradient-neon);
+}
+
+.tvs-gradient-warm {
+  background: var(--tvs-gradient-warm);
+}
+
+/* Glow Effects */
+.tvs-glow-cyan {
+  box-shadow: var(--tvs-shadow-glow-cyan);
+}
+
+.tvs-glow-magenta {
+  box-shadow: var(--tvs-shadow-glow-magenta);
+}
+
+.tvs-glow-primary {
+  box-shadow: var(--tvs-shadow-glow-primary);
+}
+
+/* Card Component */
+.tvs-card {
+  background: var(--tvs-card-bg);
+  border: 1px solid var(--tvs-card-border);
+  border-radius: var(--tvs-card-radius);
+  padding: var(--tvs-card-padding);
+  box-shadow: var(--tvs-card-shadow);
+  transition: var(--tvs-transition-transform), var(--tvs-transition-shadow);
+}
+
+.tvs-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tvs-card-shadow-hover);
+}
+
+/* Badge Component */
+.tvs-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--tvs-badge-radius);
+  padding: var(--tvs-badge-padding-y) var(--tvs-badge-padding-x);
+  font-size: var(--tvs-badge-font-size);
+  font-weight: var(--tvs-badge-font-weight);
+  line-height: var(--tvs-leading-none);
+  text-transform: uppercase;
+  letter-spacing: var(--tvs-tracking-wide);
+}
+
+.tvs-badge-primary {
+  background: var(--tvs-color-primary);
+  color: var(--tvs-color-text-on-primary);
+}
+
+.tvs-badge-accent {
+  background: var(--tvs-color-accent);
+  color: var(--tvs-color-text-on-accent);
+}
+
+.tvs-badge-neon {
+  background: var(--tvs-gradient-neon);
+  color: var(--tvs-color-text-on-accent);
+  box-shadow: var(--tvs-shadow-glow-cyan);
+}
+
+/* Panel Component */
+.tvs-panel {
+  background: var(--tvs-panel-bg);
+  border: 1px solid var(--tvs-panel-border);
+  border-radius: var(--tvs-panel-radius);
+  padding: var(--tvs-panel-padding);
+}
+
+/* Text Utilities */
+.tvs-text-primary { color: var(--tvs-color-text-primary); }
+.tvs-text-secondary { color: var(--tvs-color-text-secondary); }
+.tvs-text-tertiary { color: var(--tvs-color-text-tertiary); }

@@ -1,0 +1,18 @@
+<!-- templates/index.html -->
+<!-- Standard fallback for all views -->
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
+<main class="wp-block-group">
+  <!-- wp:heading {"level":1} --> <h1>Latest</h1> <!-- /wp:heading -->
+  <!-- wp:query {"queryId":1,"query":{"perPage":10,"postType":"post"}} -->
+    <!-- wp:post-template -->
+      <!-- wp:post-title {"isLink":true} /-->
+      <!-- wp:post-excerpt /-->
+      <!-- wp:spacer {"height":"24px"} /-->
+    <!-- /wp:post-template -->
+  <!-- /wp:query -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

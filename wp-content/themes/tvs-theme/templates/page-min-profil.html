@@ -1,0 +1,101 @@
+<!-- wp:template-part {"slug":"header","tagName":"header"} /-->
+
+<main class="wp-block-group alignfull" style="margin-block-start:var(--wp--style--block-gap);padding:2em;">
+	<div class="wp-block-group__inner-container">
+		<h1>Min profil</h1>
+		
+		<div id="profile-messages" style="margin:2em 0;"></div>
+		
+		<section style="background:#f9f9f9;padding:2em;border-radius:8px;margin:2em 0;">
+			<h2 style="margin-top:0;">Strava-tilkobling</h2>
+			<div id="strava-status-section">
+				<p style="color:#666;">Laster status ...</p>
+			</div>
+		</section>
+		
+		<section style="background:#f9f9f9;padding:2em;border-radius:8px;margin:2em 0;">
+			<h2 style="margin-top:0;">Mine aktiviteter</h2>
+			<p><a href="/my-activities/" class="button">Vis mine aktiviteter</a></p>
+		</section>
+	</div>
+</main>
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	// Check for success message from Strava connect
+	const urlParams = new URLSearchParams(window.location.search);
+	const stravaOk = urlParams.get('strava');
+	const messagesDiv = document.getElementById('profile-messages');
+	
+	if (stravaOk === 'ok') {
+		messagesDiv.innerHTML = '<div style="background:#d4edda;color:#155724;padding:1em;border-radius:4px;margin-bottom:1em;"><strong>✓ Strava tilkoblet!</strong> Du kan nå laste opp aktiviteter til Strava.</div>';
+		// Clean URL
+		if (window.history && window.history.replaceState) {
+			window.history.replaceState({}, document.title, window.location.pathname);
+		}
+	}
+	
+	// Check Strava connection status via REST API
+	if (typeof TVS_SETTINGS === 'undefined') {
+		console.warn('TVS_SETTINGS not loaded, skipping Strava status check');
+		return;
+	}
+	
+	const statusSection = document.getElementById('strava-status-section');
+	
+	// Fetch current user's Strava status
+	fetch(`${TVS_SETTINGS.restRoot}tvs/v1/strava/status`, {
+		method: 'GET',
+		headers: {
+			'X-WP-Nonce': TVS_SETTINGS.nonce
+		}
+	})
+	.then(async r => {
+		const data = await r.json().catch(() => null);
+		if (!r.ok) {
+			throw new Error(data?.message || 'Kunne ikke hente status');
+		}
+		return data;
+	})
+	.then(data => {
+		if (data.connected) {
+			const athlete = data.athlete || {};
+			const scope = data.scope || 'ukjent';
+			const hasUploadScope = scope.includes('activity:write');
+			
+			statusSection.innerHTML = `
+				<div style="display:flex;align-items:center;gap:1em;margin-bottom:1em;">
+					<div style="width:48px;height:48px;background:#fc4c02;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;">
+						${athlete.firstname ? athlete.firstname.charAt(0) : 'S'}
+					</div>
+					<div>
+						<strong>${athlete.firstname || ''} ${athlete.lastname || ''}</strong>
+						${athlete.username ? `<br><small style="color:#666;">@${athlete.username}</small>` : ''}
+					</div>
+				</div>
+				<p style="color:#28a745;font-weight:bold;">✓ Koblet til Strava</p>
+				<p style="font-size:0.9em;color:#666;">Tilganger: ${scope}</p>
+				${!hasUploadScope ? '<p style="background:#fff3cd;color:#856404;padding:0.5em;border-radius:4px;font-size:0.9em;">⚠️ Mangler <code>activity:write</code> scope. <a href="/connect-strava/">Koble til på nytt</a> for å kunne laste opp aktiviteter.</p>' : ''}
+				<div style="margin-top:1em;">
+					<a href="/connect-strava/" class="button" style="background:#fc4c02;color:#fff;padding:0.75em 1.5em;border-radius:4px;text-decoration:none;display:inline-block;">Koble til på nytt</a>
+				</div>
+			`;
+		} else {
+			statusSection.innerHTML = `
+				<p style="color:#856404;">⚠️ Ikke koblet til Strava</p>
+				<p style="font-size:0.9em;color:#666;">Koble til Strava for å laste opp aktiviteter.</p>
+				<a href="/connect-strava/" class="button" style="background:#fc4c02;color:#fff;padding:0.75em 1.5em;border-radius:4px;text-decoration:none;display:inline-block;">Connect with Strava</a>
+			`;
+		}
+	})
+	.catch(err => {
+		console.error('Failed to fetch Strava status:', err);
+		statusSection.innerHTML = `
+			<p style="color:#666;">Kunne ikke hente Strava-status.</p>
+			<a href="/connect-strava/" class="button" style="background:#fc4c02;color:#fff;padding:0.75em 1.5em;border-radius:4px;text-decoration:none;display:inline-block;">Connect with Strava</a>
+		`;
+	});
+});
+</script>
