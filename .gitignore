@@ -22,6 +22,8 @@ vendor/
 *.sublime-project
 *.sublime-workspace
 *.code-workspace
+uploads/*
+wp-content/uploads/
 
 # Node
 node_modules/
