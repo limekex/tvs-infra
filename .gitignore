@@ -124,6 +124,9 @@ secrets.yml
 # Logs
 *.log
 
+# WordPress uploads (keep out of VCS)
+wp-content/uploads/
+
 # Misc
 *.swp
 *~.nib
