@@ -53,48 +53,122 @@ foreach ($regions as $slug => $name) {
 }
 
 // Sett sammen 6 ruter med variasjon i meta
+// Collect candidate attachments for thumbnails: original images only (not cropped variants like -150x150)
+function tvs_seed_pick_random_attachment_id() {
+  $atts = get_posts([
+    'post_type'      => 'attachment',
+    'post_status'    => 'inherit',
+    'post_mime_type' => 'image',
+    'posts_per_page' => 200,
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+    'fields'         => 'ids',
+  ]);
+  if (empty($atts)) return 0;
+  // Filter out cropped file names by inspecting _wp_attached_file meta
+  $orig = [];
+  foreach ($atts as $aid) {
+    $file = get_post_meta($aid, '_wp_attached_file', true);
+    if (!$file) continue;
+    // Exclude e.g., name-300x200.jpg
+    if (preg_match('/-\d+x\d+\.(jpe?g|png|gif|webp|avif)$/i', basename($file))) {
+      continue;
+    }
+    $orig[] = $aid;
+  }
+  if (empty($orig)) return 0;
+  return $orig[array_rand($orig)];
+}
+
 $routes = [
   [
     'title' => 'Eik Forest Trail',
     'content' => 'Morning fog, mixed forest terrain.',
     'distance_m' => 6400, 'elevation_m' => 120, 'duration_s' => 2200,
-    'video_provider' => 'vimeo', 'video_id' => '228740420', 'difficulty' => 'moderate',
+    'vimeo_id' => '228740420', 'gpx_url' => 'https://example.com/gpx/eik-forest.gpx',
+    'surface' => 'trail', 'difficulty' => 'moderate', 'location' => 'Tønsberg', 'season' => 'autumn',
     'region' => 'tonsberg', 'types' => ['run']
   ],
   [
     'title' => 'Fjordside Ride',
     'content' => 'Coastal views and gentle climbs.',
     'distance_m' => 18000, 'elevation_m' => 260, 'duration_s' => 3600,
-    'video_provider' => 'vimeo', 'video_id' => '76979871', 'difficulty' => 'easy',
+    'vimeo_id' => '76979871', 'gpx_url' => 'https://example.com/gpx/fjordside-ride.gpx',
+    'surface' => 'asphalt', 'difficulty' => 'easy', 'location' => 'Oslo', 'season' => 'summer',
     'region' => 'oslo', 'types' => ['ride']
   ],
   [
     'title' => 'City Park Laps',
     'content' => 'Flat loops perfect for intervals.',
     'distance_m' => 5000, 'elevation_m' => 40, 'duration_s' => 1500,
-    'video_provider' => 'vimeo', 'video_id' => '143418951', 'difficulty' => 'easy',
+    'vimeo_id' => '143418951', 'gpx_url' => 'https://example.com/gpx/city-park-laps.gpx',
+    'surface' => 'asphalt', 'difficulty' => 'easy', 'location' => 'Oslo', 'season' => 'spring',
     'region' => 'oslo', 'types' => ['run','walk']
   ],
   [
     'title' => 'Mountain Edge Hike',
     'content' => 'Rocky sections with rewarding vistas.',
     'distance_m' => 12000, 'elevation_m' => 620, 'duration_s' => 7200,
-    'video_provider' => 'vimeo', 'video_id' => '22439234', 'difficulty' => 'hard',
+    'vimeo_id' => '22439234', 'gpx_url' => 'https://example.com/gpx/mountain-edge.gpx',
+    'surface' => 'rock', 'difficulty' => 'hard', 'location' => 'Bergen', 'season' => 'summer',
     'region' => 'bergen', 'types' => ['walk']
   ],
   [
     'title' => 'Lake Loop',
     'content' => 'Smooth loop around the lake.',
     'distance_m' => 8500, 'elevation_m' => 90, 'duration_s' => 2600,
-    'video_provider' => 'vimeo', 'video_id' => '1084537', 'difficulty' => 'moderate',
+    'vimeo_id' => '1084537', 'gpx_url' => 'https://example.com/gpx/lake-loop.gpx',
+    'surface' => 'mixed', 'difficulty' => 'moderate', 'location' => 'Tønsberg', 'season' => 'summer',
     'region' => 'tonsberg', 'types' => ['ride','run']
   ],
   [
     'title' => 'Harbor Walk',
     'content' => 'Urban waterfront with cafes.',
     'distance_m' => 3200, 'elevation_m' => 10, 'duration_s' => 900,
-    'video_provider' => 'vimeo', 'video_id' => '769798710', 'difficulty' => 'easy',
+    'vimeo_id' => '769798710', 'gpx_url' => 'https://example.com/gpx/harbor-walk.gpx',
+    'surface' => 'boardwalk', 'difficulty' => 'easy', 'location' => 'Bergen', 'season' => 'autumn',
     'region' => 'bergen', 'types' => ['walk']
+  ],
+  // Additional routes to expand dataset
+  [
+    'title' => 'Riverbank Run',
+    'content' => 'Shaded path along the river.',
+    'distance_m' => 7200, 'elevation_m' => 55, 'duration_s' => 2400,
+    'vimeo_id' => '76979999', 'gpx_url' => 'https://example.com/gpx/riverbank-run.gpx',
+    'surface' => 'gravel', 'difficulty' => 'easy', 'location' => 'Oslo', 'season' => 'spring',
+    'region' => 'oslo', 'types' => ['run']
+  ],
+  [
+    'title' => 'Forest Ridge MTB',
+    'content' => 'Technical singletrack with roots and rocks.',
+    'distance_m' => 15000, 'elevation_m' => 410, 'duration_s' => 5400,
+    'vimeo_id' => '228740421', 'gpx_url' => 'https://example.com/gpx/forest-ridge-mtb.gpx',
+    'surface' => 'trail', 'difficulty' => 'hard', 'location' => 'Bergen', 'season' => 'summer',
+    'region' => 'bergen', 'types' => ['ride']
+  ],
+  [
+    'title' => 'Seaside Stroll',
+    'content' => 'Windy day with waves crashing nearby.',
+    'distance_m' => 4200, 'elevation_m' => 20, 'duration_s' => 1300,
+    'vimeo_id' => '143418952', 'gpx_url' => 'https://example.com/gpx/seaside-stroll.gpx',
+    'surface' => 'boardwalk', 'difficulty' => 'easy', 'location' => 'Tønsberg', 'season' => 'summer',
+    'region' => 'tonsberg', 'types' => ['walk']
+  ],
+  [
+    'title' => 'Urban Sprint',
+    'content' => 'Short and fast downtown circuit.',
+    'distance_m' => 3000, 'elevation_m' => 25, 'duration_s' => 900,
+    'vimeo_id' => '22439235', 'gpx_url' => 'https://example.com/gpx/urban-sprint.gpx',
+    'surface' => 'asphalt', 'difficulty' => 'moderate', 'location' => 'Oslo', 'season' => 'winter',
+    'region' => 'oslo', 'types' => ['run']
+  ],
+  [
+    'title' => 'Hill Repeats',
+    'content' => 'Steady climb repeats with scenic overlooks.',
+    'distance_m' => 6000, 'elevation_m' => 350, 'duration_s' => 3000,
+    'vimeo_id' => '1084538', 'gpx_url' => 'https://example.com/gpx/hill-repeats.gpx',
+    'surface' => 'asphalt', 'difficulty' => 'hard', 'location' => 'Oslo', 'season' => 'autumn',
+    'region' => 'oslo', 'types' => ['run','ride']
   ],
 ];
 
@@ -116,9 +190,12 @@ foreach ($routes as $idx => $r) {
   update_post_meta($rid, 'distance_m', $r['distance_m']);
   update_post_meta($rid, 'elevation_m', $r['elevation_m']);
   update_post_meta($rid, 'duration_s', $r['duration_s']);
-  update_post_meta($rid, 'video_provider', $r['video_provider']);
-  update_post_meta($rid, 'video_id', $r['video_id']);
-  update_post_meta($rid, 'difficulty', $r['difficulty']);
+  if (!empty($r['vimeo_id'])) update_post_meta($rid, 'vimeo_id', $r['vimeo_id']);
+  if (!empty($r['gpx_url'])) update_post_meta($rid, 'gpx_url', $r['gpx_url']);
+  if (!empty($r['surface'])) update_post_meta($rid, 'surface', $r['surface']);
+  if (!empty($r['difficulty'])) update_post_meta($rid, 'difficulty', $r['difficulty']);
+  if (!empty($r['location'])) update_post_meta($rid, 'location', $r['location']);
+  if (!empty($r['season'])) update_post_meta($rid, 'season', $r['season']);
   update_post_meta($rid, 'seed_batch', $SEED_BATCH);
 
   // Taxonomier
@@ -130,6 +207,12 @@ foreach ($routes as $idx => $r) {
   }
 
   $route_ids[] = $rid;
+
+  // Set random featured image from local uploads (originals only)
+  $thumb = tvs_seed_pick_random_attachment_id();
+  if ($thumb) {
+    set_post_thumbnail($rid, $thumb);
+  }
 }
 
 // Aktiviteter (2–3 stk), knyttet til noen av rutene
