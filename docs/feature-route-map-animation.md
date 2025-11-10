@@ -1,4 +1,4 @@
-# Feature: Route Map Animation
+# Feature: Virtual Training Experience (Route Map Animation)
 
 **Branch:** `feature/route-map-animation`  
 **Status:** 🚧 In Development  
@@ -6,11 +6,22 @@
 
 ## Konsept
 
-Erstatte Vimeo-videoen med en scroll-basert animert kartvisning for ruter uten video. Bruker kan scrolle gjennom ruten med same fullscreen-opplevelse som cinematic mode.
+En **virtuell treningsopplevelse** for ruter uten video. Brukeren oppgir sin hastighet (km/t eller min/km), og kartet animeres i sanntid som om de løper/sykler ruten i fugleperspektiv. Perfekt for tredemølle eller ergometersykkel! 🏃‍♂️🚴‍♂️
+
+### Use Case
+
+**Scenario:** Du skal trene på tredemølle/ergometersykkel og vil "oppleve" en ekte rute samtidig.
+
+1. Åpne en rute uten video (f.eks. "Afternoon Run" - 8.2 km)
+2. Gå inn i fullscreen-modus
+3. Oppgi din hastighet (f.eks. 10 km/t for løping, 25 km/t for sykling)
+4. Trykk **Start** → Kartet animeres i fugleperspektiv i sanntid
+5. Tren mens du ser terrenget, høydeprofilen og fremdriften din
+6. Pause/fortsett etter behov
 
 ### Når brukes det?
 
-- ✅ Rute **HAR** `gpx_url` og **MANGLER** `vimeo_id` → Vis map animation
+- ✅ Rute **HAR** `gpx_url` og **MANGLER** `vimeo_id` → Vis virtual training mode
 - ❌ Rute **HAR** `vimeo_id` → Vis Vimeo-player (existing behavior)
 - ❌ Rute mangler både GPX og video → Show fallback
 
@@ -44,20 +55,17 @@ Route Player Block
 // Core GSAP
 https://unpkg.com/gsap@3/dist/gsap.min.js
 
-// ScrollTrigger (FREE)
-https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js
-
-// MotionPathPlugin (FREE)
+// MotionPathPlugin (FREE) - Animate marker along path
 https://unpkg.com/gsap@3/dist/MotionPathPlugin.min.js
 
-// DrawSVG (PREMIUM - 99$/year)
-// Alternative: CSS stroke-dashoffset animation eller anime.js
+// NOTE: ScrollTrigger NOT needed - we use time-based animation instead!
 ```
 
-**⚠️ Licensing Note:** DrawSVGPlugin er premium. Vurder alternativer:
-1. CSS `stroke-dasharray` + `stroke-dashoffset` animasjon
+**⚠️ Licensing Note:** DrawSVGPlugin er premium ($99/year). Vurder alternativer:
+1. CSS `stroke-dasharray` + `stroke-dashoffset` animasjon (synkronisert med marker)
 2. [anime.js](https://animejs.com/) (gratis, open source)
-3. Custom implementation
+3. Skip path drawing entirely - just show full route and animate marker
+4. **Recommendation:** Skip DrawSVG for MVP - just show the full route path
 
 #### Mapping
 
@@ -76,20 +84,36 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGltZWtleCIsImEiOiJjbTN4emN4NDUwY2o2MmtzOXRrb
    ↓
 3a. Has video → Render Vimeo player
    |
-3b. No video, has GPX → Fetch GPX file
+3b. No video, has GPX → Show Virtual Training Mode
    ↓
-4. Parse GPX → Extract lat/lng/elevation points
+4. Fetch and parse GPX file
    ↓
-5. Convert coordinates to:
-   - SVG path for animation
-   - GeoJSON for map rendering
+5. Calculate route metrics:
+   - Total distance (km)
+   - Elevation profile
+   - Start/end coordinates
    ↓
-6. Initialize GSAP ScrollTrigger
+6. Convert GPX to:
+   - SVG path for marker animation
+   - GeoJSON for map route rendering
    ↓
-7. Bind scroll position to:
-   - Marker position on path
-   - Map center/zoom
-   - Progress stats
+7. User inputs speed (km/h or min/km)
+   ↓
+8. Calculate animation duration:
+   duration = distance / speed
+   ↓
+9. User clicks "Start"
+   ↓
+10. Initialize GSAP timeline animation:
+    - Animate marker along SVG path
+    - Sync map camera to marker position
+    - Update real-time stats (distance, elevation, time remaining)
+    ↓
+11. User controls:
+    - Pause/Resume
+    - Speed up/slow down
+    - Restart
+    - Fullscreen toggle
 ```
 
 ## Implementation Plan
@@ -106,10 +130,18 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGltZWtleCIsImEiOiJjbTN4emN4NDUwY2o2MmtzOXRrb
 - [ ] Implement scroll-based animation
 
 ### Phase 3: Controls & UX
+- [ ] Speed input field (km/h or min/km toggle)
+- [ ] Start/Pause/Resume buttons
+- [ ] Restart button
+- [ ] Speed adjustment controls (+/- buttons or slider)
 - [ ] Reuse fullscreen mode from cinematic mode
-- [ ] Add play/pause button (auto-scroll)
-- [ ] Create progress bar synced to scroll
-- [ ] Add stats overlay (current km, elevation, etc.)
+- [ ] Create progress bar synced to time
+- [ ] Real-time stats overlay:
+  - Current speed
+  - Distance traveled vs. total
+  - Current elevation
+  - Time elapsed / Time remaining
+  - ETA (estimated time of arrival)
 
 ### Phase 4: Performance & Polish
 - [ ] GPX point simplification (reduce overhead)
@@ -146,56 +178,105 @@ function gpxToSvgPath(gpxPoints, width, height) {
 - [turf.js](https://turfjs.org/) - Geospatial analysis
 - [simplify-js](https://mourner.github.io/simplify-js/) - Point reduction
 
-### 2. Sync Map with Marker
+### 2. Sync Map with Marker (Real-time Camera Following)
 
-**CodePen Approach:**
+**Time-based Animation Approach:**
 ```javascript
-// Move container opposite to marker position
-const xTo = gsap.quickTo('#container', 'x', {duration: 0.7});
-const yTo = gsap.quickTo('#container', 'y', {duration: 0.7});
+// Calculate duration based on user speed
+const routeDistanceKm = 8.2; // From GPX
+const userSpeedKmh = 12; // User input
+const durationSeconds = (routeDistanceKm / userSpeedKmh) * 3600;
 
-gsap.ticker.add(() => {
-  xTo(-gsap.getProperty('#marker', 'x'));
-  yTo(-gsap.getProperty('#marker', 'y'));
-});
-```
-
-**Map Adaptation:**
-```javascript
-// Update map center to marker's lat/lng
-gsap.ticker.add(() => {
-  const markerCoords = getMarkerLatLng(); // Based on path progress
-  map.setCenter(markerCoords);
-  // Optionally adjust zoom based on terrain
-});
-```
-
-### 3. DrawSVG Alternative
-
-Since DrawSVG is premium ($99/year), implement CSS-based alternative:
-
-```css
-.route-path {
-  stroke-dasharray: 1000; /* Total path length */
-  stroke-dashoffset: 1000; /* Start hidden */
-  animation: draw 2s ease-out forwards;
-}
-
-@keyframes draw {
-  to {
-    stroke-dashoffset: 0; /* Reveal path */
+// Create GSAP timeline
+const timeline = gsap.timeline({
+  paused: true, // Wait for user to click "Start"
+  onUpdate: function() {
+    const progress = timeline.progress(); // 0 to 1
+    
+    // Get current marker position
+    const markerCoords = getMarkerLatLng(progress);
+    
+    // Update map camera (smooth following)
+    map.easeTo({
+      center: markerCoords,
+      zoom: 14,
+      pitch: 60, // Bird's eye view angle
+      duration: 100 // Smooth transition
+    });
+    
+    // Update stats
+    updateStats(progress, durationSeconds);
   }
-}
-```
+});
 
-Or use GSAP's free features:
-```javascript
-// Animate using clip-path or mask
-gsap.to('.route-path', {
-  clipPath: 'inset(0 0 0 100%)',
-  scrollTrigger: { /* ... */ }
+// Animate marker along path
+timeline.to('#marker', {
+  motionPath: {
+    path: '#routePath',
+    align: '#routePath',
+    alignOrigin: [0.5, 0.5]
+  },
+  duration: durationSeconds,
+  ease: 'none' // Constant speed
+});
+
+// User clicks "Start"
+document.getElementById('startBtn').addEventListener('click', () => {
+  timeline.play();
 });
 ```
+
+**Key Differences from CodePen:**
+- ❌ No scroll binding (ScrollTrigger)
+- ✅ Time-based animation (duration calculated from speed)
+- ✅ User controls (play/pause/speed adjustment)
+- ✅ Real map camera following (not just SVG container movement)
+
+### 3. Path Rendering Strategy
+
+**Decision: Show full route immediately, animate marker only**
+
+Since DrawSVG is premium ($99/year) and we want the user to see the full route from start:
+
+```javascript
+// Simple approach: Display full route path from start
+// Only animate the marker position
+
+// Route path (always visible)
+<path id="routePath" 
+      class="route-path" 
+      stroke="#3b82f6" 
+      stroke-width="4" 
+      fill="none" 
+      d="M..." />
+
+// Animated marker
+<circle id="marker" 
+        r="8" 
+        fill="#ef4444" 
+        filter="drop-shadow(0 2px 8px rgba(239,68,68,0.6))" />
+
+// Optional: "Completed" path overlay
+<path id="completedPath" 
+      stroke="#22c55e" 
+      stroke-width="6" 
+      fill="none" 
+      d="M..." 
+      stroke-dasharray="1000" 
+      stroke-dashoffset="1000" />
+```
+
+**If we want "completed path" effect:**
+```javascript
+// Sync dashoffset with marker progress
+timeline.to('#completedPath', {
+  strokeDashoffset: 0,
+  duration: durationSeconds,
+  ease: 'none'
+}, 0); // Start at same time as marker
+```
+
+**Recommendation for MVP:** Skip the drawing effect - just show full route and animate marker. Add "completed path" overlay as enhancement later.
 
 ## File Structure (Proposed)
 
@@ -234,24 +315,33 @@ wp-content/plugins/tvs-virtual-sports/
    - ❌ Create separate `route-map-animation` block (cleaner separation)
 
 2. **DrawSVG Licensing:**
-   - Pay $99/year for official plugin?
-   - Use CSS-based alternative?
-   - Use anime.js instead?
+   - ✅ **DECISION:** Skip DrawSVG for MVP - show full route, animate marker only
+   - 💡 Enhancement: Add "completed path" overlay later using CSS stroke-dashoffset
 
 3. **Map Provider:**
    - ✅ Mapbox (already have token, used in weather widget)
    - ❌ Leaflet + OpenStreetMap (free, but different API)
    - ❌ Google Maps (expensive)
 
-4. **Scroll Behavior:**
-   - Use CodePen's approach (scroll distance = animation progress)?
-   - Add "auto-play" button that smoothly scrolls?
-   - Both?
+4. **Speed Input:**
+   - Toggle between km/h and min/km?
+   - Presets for different activities (walking: 5 km/h, running: 10-12 km/h, cycling: 20-30 km/h)?
+   - Allow speed adjustment during animation?
 
-5. **Mobile Experience:**
-   - Scroll can be tricky on mobile
-   - Alternative: Swipe gestures?
-   - Or: Auto-play mode only on mobile?
+5. **Map Camera Behavior:**
+   - Fixed zoom level or dynamic based on terrain?
+   - Fixed pitch (60°) or adjustable?
+   - Smooth easing or instant updates?
+
+6. **Mobile Experience:**
+   - Touch controls for speed adjustment
+   - Simplified UI for smaller screens
+   - Landscape mode required?
+
+7. **Pause Behavior:**
+   - Remember position when paused
+   - Allow "rewind" or only forward?
+   - Show speed = 0 km/h when paused?
 
 ## Resources & References
 
