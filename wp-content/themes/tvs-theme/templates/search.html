@@ -1,0 +1,21 @@
+<!-- Search results template (routes first) -->
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"tvs-main"} -->
+<main class="wp-block-group alignfull tvs-main">
+	<!-- wp:group {"className":"tvs-container tvs-stack"} -->
+	<div class="wp-block-group tvs-container tvs-stack">
+		<!-- wp:heading {"level":1} --> <h1>Søk</h1> <!-- /wp:heading -->
+		<!-- wp:search {"label":"Søk","showLabel":false,"buttonText":"Søk"} /-->
+		<!-- wp:query {"query":{"perPage":10}} -->
+		<!-- wp:post-template -->
+			<!-- wp:post-title {"isLink":true} /-->
+			<!-- wp:post-excerpt /-->
+		<!-- /wp:post-template -->
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

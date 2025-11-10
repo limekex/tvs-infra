@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "settings": {
+    "color": {
+      "palette": [
+        { "name": "Outdoor Green", "slug": "outdoor-green", "color": "#2a5d34" },
+        { "name": "Sky Blue", "slug": "sky-blue", "color": "#4aa6e0" },
+        { "name": "Sand", "slug": "sand", "color": "#efe6d6" },
+        { "name": "Dark", "slug": "dark", "color": "#0b0b0b" }
+      ],
+      "custom": true
+    },
+    "typography": {
+      "fontSizes": [
+        { "name": "Small", "slug": "small", "size": "13px" },
+        { "name": "Normal", "slug": "normal", "size": "16px" },
+        { "name": "Large", "slug": "large", "size": "28px" }
+      ]
+    }
+  },
+  "styles": {}
+}

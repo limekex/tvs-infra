@@ -1,0 +1,62 @@
+.tvs-dev {
+	position: fixed;
+	z-index: var(--tvs-z-notification);
+	left: var(--tvs-space-4);
+	top: var(--tvs-space-4);
+	width: 320px;
+	background: var(--tvs-color-surface-base);
+	color: var(--tvs-color-text-primary);
+	border: 1px solid var(--tvs-color-border-default);
+	border-radius: var(--tvs-radius-lg);
+	box-shadow: var(--tvs-shadow-xl);
+	font: var(--tvs-text-sm)/var(--tvs-leading-snug) var(--tvs-font-sans);
+	user-select: none;
+}
+.tvs-dev.is-min .tvs-dev__body { display: none; }
+.tvs-dev__header {
+	display: flex; align-items: center; gap: var(--tvs-space-2);
+	padding: var(--tvs-space-2) var(--tvs-space-3); cursor: move;
+	background: var(--tvs-gradient-subtle);
+	border-bottom: 1px solid var(--tvs-color-border-subtle);
+}
+.tvs-dev__spacer { flex: 1; }
+.tvs-dev__pill {
+	background: var(--tvs-color-primary); 
+	color: var(--tvs-color-text-on-primary); 
+	border-radius: var(--tvs-radius-full);
+	font-size: 11px; 
+	padding: var(--tvs-space-1) var(--tvs-space-2);
+}
+.tvs-dev__btn {
+	background: var(--tvs-color-bg-elevated); 
+	color: var(--tvs-color-text-secondary); 
+	border: 1px solid var(--tvs-color-border-default);
+	border-radius: var(--tvs-radius-sm); 
+	padding: var(--tvs-space-1) var(--tvs-space-2); 
+	cursor: pointer;
+	transition: var(--tvs-transition-colors);
+}
+.tvs-dev__btn:hover { 
+	background: var(--tvs-color-surface-raised); 
+}
+.tvs-dev__btn--ghost { background: transparent; }
+.tvs-dev__body { padding: var(--tvs-space-3); }
+.tvs-dev__row {
+	display: grid; grid-template-columns: 80px 1fr; gap: var(--tvs-space-2);
+	align-items: baseline; padding: var(--tvs-space-1) 0;
+}
+.tvs-dev__row span { color: var(--tvs-color-text-secondary); }
+.tvs-dev__row code {
+	background: var(--tvs-color-bg-primary); 
+	border: 1px solid var(--tvs-color-border-subtle); 
+	color: var(--tvs-color-text-primary);
+	padding: var(--tvs-space-1) var(--tvs-space-2); 
+	border-radius: var(--tvs-radius-sm); 
+	overflow-wrap: anywhere;
+}
+.tvs-dev__err { color: var(--tvs-color-error); }
+.tvs-dev__actions { 
+	display: flex; 
+	gap: var(--tvs-space-2); 
+	margin-top: var(--tvs-space-2); 
+}

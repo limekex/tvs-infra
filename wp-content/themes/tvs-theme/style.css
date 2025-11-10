@@ -1,0 +1,302 @@
+/*
+Theme Name: Norway Virtual Sports
+Theme URI:  https://virtualsports.online
+Author:      BeTA iT
+Author URI:  https://virtualsports.online
+Description: Block-first theme for Norway Virtual Sport (TVS). Lightweight, mobile-first, FSE-ready.
+Version:     0.1.3
+License:     GPLv2+
+Text Domain: norway-virtual-sports
+Tags: full-site-editing, one-column, accessibility-ready
+*/
+
+.tvs-container {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--tvs-space-4);
+	padding-right: var(--tvs-space-4);
+}
+
+/* Header */
+.tvs-header {
+	background: var(--tvs-color-bg-secondary);
+	border-bottom: 1px solid var(--tvs-color-border-subtle);
+	color: var(--tvs-color-text-primary);
+	padding-top: var(--tvs-space-3);
+	padding-bottom: var(--tvs-space-3);
+	/* Default header height variable used for mobile dropdown max-height */
+	--tvs-header-height: 64px;
+}
+
+.tvs-header .tvs-brand {
+	gap: var(--tvs-space-3);
+}
+
+.tvs-header .wp-block-site-title a {
+	color: var(--tvs-color-text-primary);
+	text-decoration: none;
+}
+
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > a {
+	color: var(--tvs-color-text-primary);
+	padding: var(--tvs-space-2) var(--tvs-space-3);
+	border-radius: var(--tvs-radius-sm);
+	transition: var(--tvs-transition-colors), var(--tvs-transition-shadow);
+}
+
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > a:hover,
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > a:focus {
+	color: var(--tvs-color-primary);
+	background: var(--tvs-color-glass-light);
+}
+
+/* Navigation: submenu levels (desktop) */
+.tvs-header .wp-block-navigation__submenu-container {
+	background: var(--tvs-color-bg-secondary); /* sub (level 1) */
+	border: 1px solid var(--tvs-color-border-subtle);
+}
+
+.tvs-header .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+	background: var(--tvs-color-bg-tertiary); /* sub-child (level 2+) */
+}
+
+.tvs-header .wp-block-navigation__submenu-container a,
+.tvs-header .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	color: var(--tvs-color-text-primary);
+	padding: var(--tvs-space-2) var(--tvs-space-4);
+}
+
+.tvs-header .wp-block-navigation__submenu-container a:hover,
+.tvs-header .wp-block-navigation__submenu-container a:focus {
+	background: var(--tvs-color-glass-light);
+	color: var(--tvs-color-primary);
+}
+
+/* Caret / submenu icon */
+.tvs-header .wp-block-navigation__submenu-icon {
+	color: var(--tvs-color-text-secondary);
+}
+
+/* Footer */
+.tvs-footer {
+	background: var(--tvs-color-bg-secondary);
+	border-top: 1px solid var(--tvs-color-border-subtle);
+	color: var(--tvs-color-text-secondary);
+	padding-top: var(--tvs-space-6);
+	padding-bottom: var(--tvs-space-6);
+}
+
+.tvs-footer-grid {
+	row-gap: var(--tvs-space-6);
+}
+
+.tvs-footer a { color: var(--tvs-color-text-primary); }
+.tvs-footer a:hover { color: var(--tvs-color-primary); }
+
+.tvs-footer-legal {
+	border-top: 1px solid var(--tvs-color-border-subtle);
+	margin-top: var(--tvs-space-6);
+	padding-top: var(--tvs-space-4);
+	font-size: var(--tvs-text-sm);
+	color: var(--tvs-color-text-tertiary);
+}
+
+.tvs-main,
+.wp-site-blocks > main,
+main {
+	padding-top: var(--tvs-space-8);
+	padding-bottom: var(--tvs-space-8);
+}
+
+.tvs-stack {
+	display: grid;
+	gap: var(--tvs-space-6);
+}
+
+/* WP Navigation burger & overlay (mobile-first) */
+.tvs-header .wp-block-navigation__responsive-container-open,
+.tvs-header .wp-block-navigation__responsive-close {
+	color: var(--tvs-color-text-primary);
+	background: transparent;
+	padding: var(--tvs-space-2) var(--tvs-space-3);
+	border-radius: var(--tvs-radius-sm);
+}
+
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open {
+	background: transparent; /* dropdown, no modal panel */
+	color: var(--tvs-color-text-primary);
+	box-shadow: none;
+	border: 0;
+}
+
+/* Ensure the inner content panel of the mobile modal inherits the dark theme */
+
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+    background: var(--tvs-color-bg-tertiary) !important;
+    padding: var(--tvs-button-padding-x) !important;
+    margin-top: var(--tvs-space-12) !important;
+}
+
+/* Links inside the mobile modal */
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container a,
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+	color: var(--tvs-color-text-primary);
+}
+
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container a:hover,
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container a:focus {
+	background: var(--tvs-color-glass-light);
+	color: var(--tvs-color-primary);
+}
+
+/* Transform the mobile "overlay" into a full-width dropdown panel under the header */
+@media (max-width: 960px) {
+	.tvs-header .wp-block-navigation__responsive-container.is-menu-open {
+		display: block !important;
+		/* Make the dropdown independent of the header flow to avoid shifting the header */
+		position: fixed !important;
+		top: var(--tvs-header-height);
+		left: 0;
+		right: 0;
+		inset-inline: 0;
+		width: 100%;
+		max-width: 100%;
+		border-left: 0;
+		border-right: 0;
+		border-bottom: 1px solid var(--tvs-color-border-subtle);
+		box-shadow: none;
+		z-index: var(--tvs-z-sticky);
+	}
+
+	.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+		padding: var(--tvs-space-2) 0;
+		/* Fill the viewport below the header without affecting layout */
+		height: calc(100vh - var(--tvs-header-height));
+		height: calc(100dvh - var(--tvs-header-height));
+		overflow-y: auto;
+	}
+
+	/* Hide overlay and close header to eliminate modal chrome */
+	.tvs-header .wp-block-navigation__responsive-overlay,
+	.tvs-header .wp-block-navigation__responsive-container-header { display: none !important; }
+	/* Keep the wrapper visible but hide only the close button */
+	.tvs-header .wp-block-navigation__responsive-close { display: block !important; background: transparent !important; }
+	.tvs-header .wp-block-navigation__responsive-container-close { display: none !important; }
+
+	/* Flatten the dialog container */
+	.tvs-header .wp-block-navigation__responsive-dialog {
+		position: static !important;
+		inset: auto !important;
+		width: 100% !important;
+		max-width: none !important;
+		background: transparent !important;
+		box-shadow: none !important;
+		border: 0 !important;
+	}
+
+	/* Center menu items horizontally, stack vertically */
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--tvs-space-1);
+		width: 100%;
+		padding: var(--tvs-space-2) 0;
+	}
+
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container > .wp-block-navigation-item > a,
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+		width: 100%;
+		text-align: center;
+		padding: var(--tvs-space-3) var(--tvs-space-4);
+	}
+
+	/* Nested submenus keep readable backgrounds */
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__submenu-container {
+		background: var(--tvs-color-bg-secondary);
+	}
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+		background: var(--tvs-color-bg-tertiary);
+	}
+
+	/* Ensure body remains scrollable even when menu is open */
+	body.has-modal-open { overflow: auto !important; }
+}
+
+.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container a {
+	color: var(--tvs-color-text-primary);
+	/* Larger touch targets on mobile menu */
+	padding: var(--tvs-space-4) var(--tvs-space-5);
+	min-height: 44px;
+	display: block;
+}
+
+/* Navigation: levels within overlay (mobile). We keep one panel (primary), but ensure nested items remain readable */
+.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container .has-child .wp-block-navigation__submenu-container {
+	background: var(--tvs-color-bg-secondary);
+}
+.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container .has-child .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+	background: var(--tvs-color-bg-tertiary);
+}
+
+/* Strong override for WP default white modal background on open */
+.tvs-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open {
+	background: transparent !important;
+}
+.tvs-header .wp-block-navigation__responsive-dialog {
+	background: transparent !important;
+}
+
+
+/* Responsive reductions for small screens */
+@media (max-width: 640px) {
+	.tvs-main,
+	.wp-site-blocks > main,
+	main {
+		padding-top: var(--tvs-space-6);
+		padding-bottom: var(--tvs-space-6);
+	}
+}
+
+@media (max-width: 420px) {
+	.tvs-main,
+	.wp-site-blocks > main,
+	main {
+		padding-top: var(--tvs-space-4);
+		padding-bottom: var(--tvs-space-4);
+	}
+}
+
+/* .tvs-routes-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: var(--tvs-space-6);
+	margin-top: var(--tvs-space-8);
+}
+
+.tvs-route-card {
+	background: var(--tvs-card-bg);
+	border: 1px solid var(--tvs-card-border);
+	border-radius: var(--tvs-card-radius);
+	box-shadow: var(--tvs-card-shadow);
+	transition: var(--tvs-transition-transform), var(--tvs-transition-shadow);
+} */
+
+.tvs-route-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--tvs-card-shadow-hover);
+}
+
+.tvs-route-card h3 {
+	margin-top: 0;
+	margin-bottom: var(--tvs-space-2);
+	font-size: var(--tvs-text-xl);
+	color: var(--tvs-color-text-primary);
+}
+
+.tvs-route-card .route-meta {
+	color: var(--tvs-color-text-secondary);
+	font-size: var(--tvs-text-sm);
+	margin: 0;
+}
