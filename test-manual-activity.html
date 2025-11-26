@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Manual Activity API - Issue #21</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-top: 0; }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .status.info { background: #e3f2fd; color: #1976d2; }
+        .status.success { background: #e8f5e9; color: #388e3c; }
+        .status.error { background: #ffebee; color: #c62828; }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 4px;
+            border-left: 4px solid #2196f3;
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px;
+        }
+        button:hover { background: #1976d2; }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100px;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .activity-type-selector {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .type-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .type-btn.selected {
+            background: #2196f3;
+            color: white;
+            border-color: #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏃 Manual Activity Tracker - Test Dashboard</h1>
+        <p>Test backend for Issue #21. Make sure you're logged into WordPress at <a href="http://localhost:8080/wp-admin/" target="_blank">localhost:8080/wp-admin</a> first!</p>
+
+        <div id="status" class="status info">
+            ℹ️ Not logged in. Please login to WordPress first.
+        </div>
+
+        <!-- Test 1: Start Activity -->
+        <div class="test-section">
+            <h2>1️⃣ Start Manual Activity</h2>
+            <p>Select activity type and start a new session:</p>
+            
+            <div class="activity-type-selector">
+                <button class="type-btn selected" data-type="Run">🏃 Run</button>
+                <button class="type-btn" data-type="Ride">🚴 Ride</button>
+                <button class="type-btn" data-type="Walk">🚶 Walk</button>
+                <button class="type-btn" data-type="Hike">🥾 Hike</button>
+            </div>
+
+            <button id="startBtn" onclick="startActivity()">Start Activity</button>
+            <div id="sessionInfo"></div>
+        </div>
+
+        <!-- Test 2: Live Metrics -->
+        <div class="test-section" id="metricsSection" style="display: none;">
+            <h2>2️⃣ Live Metrics Dashboard</h2>
+            
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-label">⏱️ Elapsed Time</div>
+                    <div class="metric-value" id="elapsedTime">00:00:00</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">📏 Distance (km)</div>
+                    <div class="metric-value" id="distance">0.00</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">⚡ Speed (km/h)</div>
+                    <div class="metric-value" id="speed">0.0</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">🏃 Pace (min/km)</div>
+                    <div class="metric-value" id="pace">0:00</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <label>Speed:</label>
+                <button onclick="adjustSpeed(-0.5)">-0.5</button>
+                <input type="number" id="speedInput" value="10.0" step="0.5" min="0">
+                <button onclick="adjustSpeed(0.5)">+0.5</button>
+                <button onclick="updateMetrics()">Update</button>
+            </div>
+
+            <div class="controls">
+                <label>Incline (%):</label>
+                <button onclick="adjustIncline(-0.5)">-0.5</button>
+                <input type="number" id="inclineInput" value="0" step="0.5">
+                <button onclick="adjustIncline(0.5)">+0.5</button>
+            </div>
+
+            <button onclick="pauseActivity()" id="pauseBtn">⏸️ Pause</button>
+            <button onclick="finishActivity()" id="finishBtn">⏹️ Stop & Save</button>
+        </div>
+
+        <!-- Test 3: Finished Activity -->
+        <div class="test-section" id="finishedSection" style="display: none;">
+            <h2>3️⃣ Activity Saved!</h2>
+            <div id="activityInfo"></div>
+            <button onclick="uploadToStrava()" id="stravaBtn">Upload to Strava</button>
+        </div>
+
+        <!-- Debug Log -->
+        <div class="test-section">
+            <h2>🐛 Debug Log</h2>
+            <button onclick="clearLog()">Clear Log</button>
+            <pre id="log"></pre>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/wp-json/tvs/v1';
+        let sessionId = null;
+        let sessionData = null;
+        let timerInterval = null;
+        let autoSaveInterval = null;
+        let startTime = null;
+        let isPaused = false;
+        let activityId = null;
+        let selectedType = 'Run';
+
+        // Activity type selector
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedType = this.dataset.type;
+                log(`Selected activity type: ${selectedType}`);
+            });
+        });
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.textContent += `[${timestamp}] ${message}\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').textContent = '';
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const response = await fetch(url, {
+                ...options,
+                credentials: 'include', // Include cookies
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers,
+                }
+            });
+            return response;
+        }
+
+        async function startActivity() {
+            try {
+                showStatus('Starting activity...', 'info');
+                log(`Starting ${selectedType} activity...`);
+
+                const response = await fetchWithAuth(`${API_BASE}/activities/manual/start`, {
+                    method: 'POST',
+                    body: JSON.stringify({ type: selectedType })
+                });
+
+                const data = await response.json();
+                log(`Response: ${JSON.stringify(data, null, 2)}`);
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to start activity');
+                }
+
+                if (data.success) {
+                    sessionId = data.session_id;
+                    sessionData = data.session_data;
+                    startTime = Date.now();
+                    
+                    showStatus(`✅ ${selectedType} activity started! Session: ${sessionId}`, 'success');
+                    log(`Session ID: ${sessionId}`);
+                    
+                    document.getElementById('metricsSection').style.display = 'block';
+                    document.getElementById('startBtn').disabled = true;
+                    
+                    // Start timer
+                    startTimer();
+                    
+                    // Auto-save every 30 seconds
+                    autoSaveInterval = setInterval(() => {
+                        if (!isPaused) {
+                            updateMetrics();
+                        }
+                    }, 30000);
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    document.getElementById('elapsedTime').textContent = formatTime(elapsed);
+                    
+                    // Auto-calculate distance based on speed
+                    const speed = parseFloat(document.getElementById('speedInput').value);
+                    const distance = (speed * elapsed) / 3600; // km
+                    document.getElementById('distance').textContent = distance.toFixed(2);
+                    
+                    // Calculate pace
+                    const pace = speed > 0 ? 60 / speed : 0;
+                    document.getElementById('pace').textContent = formatPace(pace);
+                }
+            }, 1000);
+        }
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function formatPace(pace) {
+            const min = Math.floor(pace);
+            const sec = Math.floor((pace - min) * 60);
+            return `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function adjustSpeed(delta) {
+            const input = document.getElementById('speedInput');
+            input.value = Math.max(0, parseFloat(input.value) + delta).toFixed(1);
+            document.getElementById('speed').textContent = input.value;
+        }
+
+        function adjustIncline(delta) {
+            const input = document.getElementById('inclineInput');
+            input.value = (parseFloat(input.value) + delta).toFixed(1);
+        }
+
+        async function updateMetrics() {
+            if (!sessionId) return;
+
+            try {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const speed = parseFloat(document.getElementById('speedInput').value);
+                const distance = (speed * elapsed) / 3600;
+                const pace = speed > 0 ? 60 / speed : 0;
+                const incline = parseFloat(document.getElementById('inclineInput').value);
+
+                log(`Updating metrics: speed=${speed}, distance=${distance.toFixed(2)}, elapsed=${elapsed}`);
+
+                const response = await fetchWithAuth(`${API_BASE}/activities/manual/${sessionId}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        elapsed_time: elapsed,
+                        distance: distance,
+                        speed: speed,
+                        pace: pace,
+                        incline: incline
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showStatus('✅ Metrics updated', 'success');
+                    log('Metrics saved to session');
+                } else {
+                    throw new Error(data.message || 'Failed to update metrics');
+                }
+            } catch (error) {
+                showStatus(`❌ Update failed: ${error.message}`, 'error');
+                log(`Update error: ${error.message}`, 'error');
+            }
+        }
+
+        function pauseActivity() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('pauseBtn');
+            btn.textContent = isPaused ? '▶️ Resume' : '⏸️ Pause';
+            showStatus(isPaused ? '⏸️ Activity paused' : '▶️ Activity resumed', 'info');
+            log(isPaused ? 'Activity paused' : 'Activity resumed');
+        }
+
+        async function finishActivity() {
+            if (!sessionId) return;
+
+            // Final metrics update
+            await updateMetrics();
+
+            try {
+                clearInterval(timerInterval);
+                clearInterval(autoSaveInterval);
+
+                showStatus('Finishing activity...', 'info');
+                log('Finishing activity and saving to database...');
+
+                const response = await fetchWithAuth(`${API_BASE}/activities/manual/${sessionId}/finish`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                log(`Response: ${JSON.stringify(data, null, 2)}`);
+
+                if (data.success) {
+                    activityId = data.activity_id;
+                    
+                    showStatus(`✅ Activity saved! ID: ${activityId}`, 'success');
+                    log(`Activity created with ID: ${activityId}`);
+                    
+                    document.getElementById('metricsSection').style.display = 'none';
+                    document.getElementById('finishedSection').style.display = 'block';
+                    
+                    document.getElementById('activityInfo').innerHTML = `
+                        <p><strong>Activity ID:</strong> ${activityId}</p>
+                        <p><strong>Type:</strong> ${selectedType}</p>
+                        <p><strong>Duration:</strong> ${document.getElementById('elapsedTime').textContent}</p>
+                        <p><strong>Distance:</strong> ${document.getElementById('distance').textContent} km</p>
+                        <p><strong>Permalink:</strong> <a href="${data.permalink}" target="_blank">${data.permalink}</a></p>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Failed to finish activity');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                log(`Finish error: ${error.message}`, 'error');
+            }
+        }
+
+        async function uploadToStrava() {
+            if (!activityId) return;
+
+            try {
+                showStatus('Uploading to Strava...', 'info');
+                log(`Uploading activity ${activityId} to Strava...`);
+
+                const response = await fetchWithAuth(`${API_BASE}/activities/${activityId}/strava/manual`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                log(`Response: ${JSON.stringify(data, null, 2)}`);
+
+                if (data.success || data.synced) {
+                    showStatus(`✅ Uploaded to Strava! Activity ID: ${data.strava_id}`, 'success');
+                    log(`Strava activity created: ${data.strava_url}`);
+                    
+                    document.getElementById('activityInfo').innerHTML += `
+                        <p><strong>✅ Synced to Strava:</strong> <a href="${data.strava_url}" target="_blank">View on Strava</a></p>
+                    `;
+                    document.getElementById('stravaBtn').disabled = true;
+                } else {
+                    throw new Error(data.message || 'Failed to upload to Strava');
+                }
+            } catch (error) {
+                showStatus(`❌ Strava upload failed: ${error.message}`, 'error');
+                log(`Strava error: ${error.message}`, 'error');
+            }
+        }
+
+        // Check if logged in on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetchWithAuth(`${API_BASE}/activities/me?per_page=1`);
+                if (response.ok) {
+                    showStatus('✅ Logged in and ready to test!', 'success');
+                    log('Authentication successful');
+                } else {
+                    showStatus('⚠️ Not logged in. Please login to WordPress first.', 'error');
+                    log('Not authenticated - please login');
+                }
+            } catch (error) {
+                showStatus('❌ Cannot connect to API', 'error');
+                log(`Connection error: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+</html>
