@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tvs/my-activities",
+  "title": "My Activities",
+  "category": "widgets",
+  "icon": "admin-users",
+  "editorScript": "tvs-theme-blocks",
+  "attributes": {},
+  "supports": {
+    "inserter": false
+  },
+  "description": "Deprecated placeholder. Use the plugin block: TVS My Activities (tvs-virtual-sports/my-activities)."
+}
