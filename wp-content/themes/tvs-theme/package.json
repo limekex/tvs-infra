@@ -1,0 +1,19 @@
+{
+  "name": "norway-virtual-sport-theme",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "wp-scripts build assets/tvs-app.js blocks/index.js --output-path=build",
+    "start": "wp-scripts start assets/tvs-app.js blocks/index.js",
+    "lint:css": "wp-scripts lint-style",
+    "format": "prettier --write '**/*.{js,php,css,scss,json,md}'"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.28.4",
+    "@wordpress/scripts": "^28.6.0",
+    "prettier": "^2.8.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0"
+  }
+}

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Training with GSAP - POC</title>
+  
+  <!-- Mapbox GL JS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+  
+  <!-- GSAP -->
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000;
+      color: white;
+      overflow: hidden;
+    }
+
+    #app {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    /* Welcome Screen */
+    #welcome {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    #welcome.hidden {
+      display: none;
+    }
+
+    .welcome-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .welcome-card h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .welcome-card .subtitle {
+      color: #4ade80;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .welcome-card p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+
+    .route-info {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .route-info h2 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #4ade80;
+    }
+
+    .route-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .route-meta div {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .route-meta strong {
+      color: white;
+      display: block;
+      margin-top: 3px;
+    }
+
+    .speed-input-group {
+      margin-bottom: 20px;
+    }
+
+    .speed-input-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    #speedInput {
+      width: 120px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 1.5rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #speedInput:focus {
+      outline: none;
+      border-color: #4ade80;
+    }
+
+    #startBtn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #startBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    #startBtn:active {
+      transform: translateY(0);
+    }
+
+    /* Map Container */
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Info Overlay - left side stats panel */
+    #info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      min-width: 280px;
+      max-width: 320px;
+      z-index: 10;
+    }
+
+    #info h2 {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #4ade80;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .stat-value {
+      color: white;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Controls */
+    #controls {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .control-btn {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #4ade80;
+    }
+
+    .control-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Speed Controls */
+    #info .speed-controls {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #info .zoom-controls {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #info .zoom-btns {
+      display: flex;
+      gap: 5px;
+    }
+
+    #info .zoom-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    #info .zoom-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #4ade80;
+    }
+
+    #info input[type="number"] {
+      width: 80px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    /* Loading State */
+    #loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 999;
+    }
+
+    #loading.hidden {
+      display: none;
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Mapbox Marker */
+    .mapbox-marker {
+      background: #ef4444;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.8);
+      cursor: pointer;
+    }
+
+    /* PoI Marker */
+    .poi-marker {
+      background: rgba(99, 102, 241, 0.95);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6);
+    }
+
+    .poi-marker:hover {
+      transform: scale(1.2);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.8);
+    }
+
+    /* PoI Popup - positioned top-right, not covering map controls */
+    .poi-popup {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(99, 102, 241, 0.5);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 380px;
+      min-width: 320px;
+      z-index: 100;
+      animation: poiSlideIn 0.4s ease-out;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes poiSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .poi-popup-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .poi-popup-icon {
+      font-size: 48px;
+    }
+
+    .poi-popup-title {
+      font-size: 1.5rem;
+      color: #6366f1;
+      font-weight: 600;
+    }
+
+    .poi-popup-description {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .poi-popup-distance {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .poi-popup-close {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .poi-popup-close:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Loading State -->
+    <div id="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome">
+      <div class="welcome-card">
+        <h1>🏃‍♂️ Virtual Training</h1>
+        <div class="subtitle">⚡ Powered by GSAP</div>
+        <p>Experience real routes with professional animation</p>
+        
+        <div class="route-info">
+          <h2 id="routeTitle">Loading route...</h2>
+          <div class="route-meta">
+            <div>Distance: <strong id="routeDistance">—</strong></div>
+            <div>Elevation: <strong id="routeElevation">—</strong></div>
+            <div>Location: <strong id="routeLocation">—</strong></div>
+            <div>Surface: <strong id="routeSurface">—</strong></div>
+          </div>
+        </div>
+
+        <div class="speed-input-group">
+          <label for="speedInput">Your Speed (km/h)</label>
+          <input type="number" id="speedInput" value="12" min="1" max="50" step="0.5">
+        </div>
+
+        <button id="startBtn">Start Training</button>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div id="map"></div>
+
+    <!-- Info Overlay -->
+    <div id="info" style="display: none;">
+      <h2>Training Stats</h2>
+      <div class="stat-row">
+        <span class="stat-label">Distance:</span>
+        <span class="stat-value" id="statDistance">0.0 / 8.2 km</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Time Elapsed:</span>
+        <span class="stat-value" id="statTimeElapsed">0:00</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Time Remaining:</span>
+        <span class="stat-value" id="statTimeRemaining">41:00</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Elevation:</span>
+        <span class="stat-value" id="statElevation">0 m</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Progress:</span>
+        <span class="stat-value" id="statProgress">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+
+      <div class="speed-controls">
+        <div class="stat-row">
+          <span class="stat-label">Speed:</span>
+          <input type="number" id="speedAdjust" value="12" min="1" max="50" step="0.5" onchange="adjustSpeed()">
+        </div>
+      </div>
+      <div class="zoom-controls">
+        <span class="stat-label">Map Zoom:</span>
+        <div class="zoom-btns">
+          <button class="zoom-btn" onclick="adjustMapZoom(-1)">−</button>
+          <button class="zoom-btn" onclick="adjustMapZoom(1)">+</button>
+        </div>
+        <span class="stat-value" id="zoomLevel">15</span>
+      </div>
+      <div class="zoom-controls">
+        <span class="stat-label">Follow:</span>
+        <button class="zoom-btn" onclick="toggleFollow()" id="followBtn">✓ On</button>
+      </div>
+      <div class="zoom-controls">
+        <span class="stat-label">Route Line:</span>
+        <button class="zoom-btn" onclick="toggleRouteLine()" id="routeLineBtn">✓ On</button>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div id="controls" style="display: none;">
+      <button class="control-btn" onclick="togglePause()">⏸ Pause</button>
+      <button class="control-btn" onclick="restartTraining()">↻ Restart</button>
+      <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const ROUTE_ID = 149;
+    const API_BASE = 'http://localhost:8080/wp-json/tvs/v1';
+    const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmV0YWl0IiwiYSI6ImNsaGhmZ3ZueTA4NHIzZW56a2VzNGoyY3EifQ.keiHwAPuzVVWMujunhJ6Fw';
+
+    // State
+    let map = null;
+    let marker = null;
+    let routeData = null;
+    let routeInfo = null;
+    let currentSpeed = 12;
+    let followMode = true;
+    let gsapTimeline = null;
+    let markerPosition = { lng: 0, lat: 0, ele: 0 };
+    let currentDistanceKm = 0;
+    let poiMarkers = [];
+    let activePoiPopup = null;
+
+    // Points of Interest (Demo data - should come from WordPress)
+    const pointsOfInterest = [
+      {
+        id: 1,
+        name: 'Oslo Neighborhood',
+        description: 'Vakker bydel i Oslo med historiske bygninger',
+        distanceKm: 1.5,
+        triggerDistanceMeters: 100, // Show PoI when 100m before
+        lng: 10.424613,
+        lat: 59.278946,
+        icon: '🏛️'
+      },
+      {
+        id: 2,
+        name: 'Park Area',
+        description: 'Grønt område med flotte turveier',
+        distanceKm: 4.0,
+        triggerDistanceMeters: 150,
+        lng: 10.416146,
+        lat: 59.286954,
+        icon: '�'
+      },
+      {
+        id: 3,
+        name: 'Scenic Viewpoint',
+        description: 'Flott utsiktspunkt over området',
+        distanceKm: 6.5,
+        triggerDistanceMeters: 200,
+        lng: 10.412843,
+        lat: 59.303919,
+        icon: '�️'
+      }
+    ];
+
+    // Initialize
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+
+    async function init() {
+      try {
+        // Fetch route info
+        const infoResp = await fetch(`${API_BASE}/routes/${ROUTE_ID}`);
+        routeInfo = await infoResp.json();
+        
+        // Fetch GPX data
+        const gpxResp = await fetch(`${API_BASE}/routes/${ROUTE_ID}/gpx-data`);
+        routeData = await gpxResp.json();
+
+        // Update welcome screen
+        document.getElementById('routeTitle').textContent = routeInfo.title;
+        document.getElementById('routeDistance').textContent = routeData.distance_km + ' km';
+        document.getElementById('routeElevation').textContent = 
+          (routeData.elevation.max - routeData.elevation.min).toFixed(0) + ' m';
+        document.getElementById('routeLocation').textContent = routeInfo.meta.location || 'Unknown';
+        document.getElementById('routeSurface').textContent = routeInfo.meta.surface || 'Mixed';
+
+        // Hide loading
+        document.getElementById('loading').classList.add('hidden');
+
+        console.log('✅ Route loaded:', routeInfo.title);
+        console.log('📍 Points:', routeData.point_count, '→', routeData.simplified_count);
+        console.log('📏 Distance:', routeData.distance_km, 'km');
+        console.log('⚡ Animation: GSAP Timeline');
+      } catch (error) {
+        console.error('Failed to load route:', error);
+        alert('Failed to load route data. Please check console.');
+      }
+    }
+
+    function startTraining() {
+      currentSpeed = parseFloat(document.getElementById('speedInput').value);
+      document.getElementById('speedAdjust').value = currentSpeed;
+
+      // Hide welcome, show map
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('info').style.display = 'block';
+      document.getElementById('controls').style.display = 'flex';
+
+      // Initialize map
+      initMap();
+    }
+
+    function initMap() {
+      const center = routeData.bounds.center;
+      
+      // Create map
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/satellite-streets-v12',
+        center: center,
+        zoom: 14,
+        pitch: 60,
+        bearing: 0
+      });
+
+      map.on('load', () => {
+        // Add full route line (gray, toggleable)
+        map.addSource('route', {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            geometry: {
+              type: 'LineString',
+              coordinates: routeData.points.map(p => [p.lng, p.lat])
+            }
+          }
+        });
+
+        map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          paint: {
+            'line-color': '#6b7280',
+            'line-width': 6,
+            'line-opacity': 0.7
+          }
+        });
+
+        // Add completed route line (same width, green)
+        map.addSource('route-completed', {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            geometry: {
+              type: 'LineString',
+              coordinates: [] // Start empty, will be populated during animation
+            }
+          }
+        });
+
+        map.addLayer({
+          id: 'route-completed',
+          type: 'line',
+          source: 'route-completed',
+          paint: {
+            'line-color': '#4ade80',
+            'line-width': 6,
+            'line-opacity': 0.95
+          }
+        });
+
+        // Add start marker
+        const startMarker = document.createElement('div');
+        startMarker.className = 'mapbox-marker';
+        startMarker.style.background = '#4ade80';
+        
+        new mapboxgl.Marker(startMarker)
+          .setLngLat([routeData.points[0].lng, routeData.points[0].lat])
+          .addTo(map);
+
+        // Add animated marker
+        const markerEl = document.createElement('div');
+        markerEl.className = 'mapbox-marker';
+        
+        marker = new mapboxgl.Marker(markerEl)
+          .setLngLat([routeData.points[0].lng, routeData.points[0].lat])
+          .addTo(map);
+
+        // Initialize marker position
+        markerPosition.lng = routeData.points[0].lng;
+        markerPosition.lat = routeData.points[0].lat;
+        markerPosition.ele = routeData.points[0].ele || 0;
+
+        // Add PoI markers
+        initPoiMarkers();
+
+        // Start GSAP animation
+        startGSAPAnimation();
+      });
+    }
+
+    function initPoiMarkers() {
+      pointsOfInterest.forEach(poi => {
+        const el = document.createElement('div');
+        el.className = 'poi-marker';
+        el.innerHTML = poi.icon;
+        el.title = poi.name;
+        
+        const poiMarker = new mapboxgl.Marker(el)
+          .setLngLat([poi.lng, poi.lat])
+          .addTo(map);
+        
+        // Click to show info
+        el.addEventListener('click', () => {
+          showPoiPopup(poi);
+        });
+        
+        poiMarkers.push({ poi, marker: poiMarker, shown: false });
+      });
+      
+      console.log(`📍 Added ${pointsOfInterest.length} Points of Interest`);
+    }
+
+    function startGSAPAnimation() {
+      const duration = (routeData.distance_km / currentSpeed) * 3600; // seconds
+      
+      // Kill existing timeline
+      if (gsapTimeline) {
+        gsapTimeline.kill();
+      }
+
+      // Create GSAP timeline
+      gsapTimeline = gsap.timeline({
+        onUpdate: updateAnimation,
+        onComplete: () => {
+          console.log('✅ Training complete!');
+        }
+      });
+
+      // Animate through all points with smooth interpolation
+      routeData.points.forEach((point, index) => {
+        const pointDuration = duration / routeData.points.length;
+        
+        gsapTimeline.to(markerPosition, {
+          lng: point.lng,
+          lat: point.lat,
+          ele: point.ele || 0,
+          duration: pointDuration,
+          ease: 'none', // Linear movement
+          onUpdate: () => {
+            // Update marker position
+            if (marker) {
+              marker.setLngLat([markerPosition.lng, markerPosition.lat]);
+            }
+            
+            // Update camera
+            if (followMode && map) {
+              map.jumpTo({
+                center: [markerPosition.lng, markerPosition.lat]
+              });
+            }
+          }
+        }, index === 0 ? 0 : '+=0'); // Start immediately or chain
+      });
+
+      console.log(`⚡ GSAP Timeline created: ${duration.toFixed(0)}s duration, ${routeData.points.length} keyframes`);
+    }
+
+    function updateCompletedRoute() {
+      if (!map || !map.getSource('route-completed')) return;
+      
+      const progress = gsapTimeline.progress();
+      
+      // Don't draw line at the very start (0% progress)
+      if (progress < 0.001) {
+        map.getSource('route-completed').setData({
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: []
+          }
+        });
+        return;
+      }
+      
+      // Calculate exact position - use same calculation as marker
+      const totalPoints = routeData.points.length;
+      const exactIndex = progress * (totalPoints - 1);
+      const baseIndex = Math.floor(exactIndex);
+      
+      // Build completed coordinates - just use GPS points up to marker
+      const completedCoords = [];
+      
+      // Add all fully completed GPS points
+      for (let i = 0; i <= baseIndex && i < totalPoints; i++) {
+        const point = routeData.points[i];
+        completedCoords.push([point.lng, point.lat]);
+      }
+      
+      // Add exact current marker position as final point (from GSAP animation)
+      completedCoords.push([markerPosition.lng, markerPosition.lat]);
+      
+      // Need at least 2 points to draw a line
+      if (completedCoords.length < 2) {
+        return;
+      }
+      
+      // Update the completed route line
+      map.getSource('route-completed').setData({
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: completedCoords
+        }
+      });
+    }
+
+    function updateAnimation() {
+      const progress = gsapTimeline.progress();
+      const duration = gsapTimeline.duration();
+      const elapsed = progress * duration;
+      const remaining = duration - elapsed;
+
+      // Update current distance
+      currentDistanceKm = routeData.distance_km * progress;
+      
+      document.getElementById('statDistance').textContent = 
+        `${currentDistanceKm.toFixed(2)} / ${routeData.distance_km} km`;
+      document.getElementById('statTimeElapsed').textContent = formatTime(elapsed);
+      document.getElementById('statTimeRemaining').textContent = formatTime(remaining);
+      document.getElementById('statProgress').textContent = (progress * 100).toFixed(1) + '%';
+      document.getElementById('progressBar').style.width = (progress * 100) + '%';
+      document.getElementById('statElevation').textContent = markerPosition.ele.toFixed(0) + ' m';
+      
+      // Update completed route line (called here for consistent timing)
+      updateCompletedRoute();
+      
+      // Check PoI proximity (called here for consistent timing)
+      checkPoiProximity();
+    }
+
+    function checkPoiProximity() {
+      if (!routeData || currentDistanceKm === 0) return;
+      
+      poiMarkers.forEach(item => {
+        const poi = item.poi;
+        
+        // Calculate actual distance along route to this PoI
+        const actualPoiDistanceKm = calculateDistanceToPoint(poi.lng, poi.lat);
+        const triggerDistanceKm = (poi.triggerDistanceMeters || 150) / 1000;
+        const hideDistanceKm = (poi.hideDistanceMeters || 100) / 1000;
+        const distanceBeforePoi = actualPoiDistanceKm - triggerDistanceKm;
+        const distanceAfterPoi = actualPoiDistanceKm + hideDistanceKm;
+        
+        // Show popup when approaching (within trigger distance before)
+        if (currentDistanceKm >= distanceBeforePoi && 
+            currentDistanceKm <= actualPoiDistanceKm && 
+            !item.shown) {
+          showPoiPopup(poi, actualPoiDistanceKm);
+          item.shown = true;
+          console.log(`📍 PoI triggered: ${poi.name} at ${currentDistanceKm.toFixed(2)} km (PoI location: ${actualPoiDistanceKm.toFixed(2)} km, trigger: ${triggerDistanceKm * 1000}m before)`);
+        }
+        
+        // Auto-hide popup after passing (based on hideDistanceMeters)
+        if (currentDistanceKm > distanceAfterPoi && activePoiPopup?.id === poi.id) {
+          hidePoiPopup();
+          console.log(`👋 PoI hidden: ${poi.name} (${hideDistanceKm * 1000}m after passing)`);
+        }
+      });
+    }
+    
+    function calculateDistanceToPoint(targetLng, targetLat) {
+      // Find closest point on route and return cumulative distance
+      let minDistance = Infinity;
+      let closestIndex = 0;
+      
+      routeData.points.forEach((point, index) => {
+        const dist = Math.sqrt(
+          Math.pow(point.lng - targetLng, 2) + 
+          Math.pow(point.lat - targetLat, 2)
+        );
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestIndex = index;
+        }
+      });
+      
+      // Calculate cumulative distance to this point
+      const progress = closestIndex / (routeData.points.length - 1);
+      return routeData.distance_km * progress;
+    }
+
+    function showPoiPopup(poi, actualDistanceKm) {
+      // Remove existing popup
+      hidePoiPopup();
+      
+      // Calculate distance to PoI from current position
+      const distanceToPoiKm = actualDistanceKm - currentDistanceKm;
+      const distanceToPoiM = Math.round(distanceToPoiKm * 1000);
+      
+      // Create popup element
+      const popup = document.createElement('div');
+      popup.className = 'poi-popup';
+      popup.innerHTML = `
+        <div class="poi-popup-header">
+          <div class="poi-popup-icon">${poi.icon}</div>
+          <div>
+            <div class="poi-popup-title">${poi.name}</div>
+          </div>
+        </div>
+        <div class="poi-popup-description">${poi.description}</div>
+        <div class="poi-popup-distance">
+          📍 At ${actualDistanceKm.toFixed(2)} km (${distanceToPoiM}m ahead)
+        </div>
+        <button class="poi-popup-close" onclick="hidePoiPopup()">Continue Training</button>
+      `;
+      
+      document.getElementById('app').appendChild(popup);
+      activePoiPopup = { id: poi.id, element: popup };
+    }
+
+    function hidePoiPopup() {
+      if (activePoiPopup) {
+        activePoiPopup.element.remove();
+        activePoiPopup = null;
+      }
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function togglePause() {
+      if (!gsapTimeline) return;
+      
+      if (gsapTimeline.paused()) {
+        gsapTimeline.play();
+        event.target.textContent = '⏸ Pause';
+        console.log('▶ Resumed');
+      } else {
+        gsapTimeline.pause();
+        event.target.textContent = '▶ Resume';
+        console.log('⏸ Paused');
+      }
+    }
+
+    function restartTraining() {
+      if (gsapTimeline) {
+        gsapTimeline.restart();
+        // Reset PoI shown state
+        poiMarkers.forEach(item => item.shown = false);
+        hidePoiPopup();
+        console.log('↻ Restarted');
+      }
+    }
+
+    function adjustSpeed() {
+      const newSpeed = parseFloat(document.getElementById('speedAdjust').value);
+      if (newSpeed > 0 && newSpeed <= 50) {
+        const currentProgress = gsapTimeline ? gsapTimeline.progress() : 0;
+        currentSpeed = newSpeed;
+        
+        // Recreate timeline with new speed
+        startGSAPAnimation();
+        
+        // Restore progress
+        if (gsapTimeline && currentProgress > 0) {
+          gsapTimeline.progress(currentProgress);
+        }
+        
+        console.log('Speed adjusted to', currentSpeed, 'km/h');
+      }
+    }
+
+    function adjustMapZoom(delta) {
+      if (map) {
+        const currentZoom = map.getZoom();
+        const newZoom = Math.max(10, Math.min(18, currentZoom + delta));
+        map.setZoom(newZoom);
+        document.getElementById('zoomLevel').textContent = Math.round(newZoom);
+      }
+    }
+
+    function toggleFollow() {
+      followMode = !followMode;
+      const btn = document.getElementById('followBtn');
+      if (followMode) {
+        btn.textContent = '✓ On';
+        btn.style.background = 'rgba(74, 222, 128, 0.3)';
+        btn.style.borderColor = '#4ade80';
+        console.log('📸 Camera follow: ON');
+      } else {
+        btn.textContent = '✗ Off';
+        btn.style.background = 'rgba(255, 255, 255, 0.1)';
+        btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        console.log('📸 Camera follow: OFF');
+      }
+    }
+
+    function toggleRouteLine() {
+      if (!map) return;
+      
+      const visibility = map.getLayoutProperty('route', 'visibility');
+      const newVisibility = visibility === 'visible' ? 'none' : 'visible';
+      
+      map.setLayoutProperty('route', 'visibility', newVisibility);
+      
+      const btn = document.getElementById('routeLineBtn');
+      if (newVisibility === 'visible') {
+        btn.textContent = '✓ On';
+        btn.style.background = 'rgba(74, 222, 128, 0.3)';
+        btn.style.borderColor = '#4ade80';
+        console.log('🛣️ Route line: ON');
+      } else {
+        btn.textContent = '✗ Off';
+        btn.style.background = 'rgba(255, 255, 255, 0.1)';
+        btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        console.log('🛣️ Route line: OFF');
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePause();
+      } else if (e.code === 'KeyF') {
+        toggleFullscreen();
+      } else if (e.code === 'KeyR') {
+        restartTraining();
+      }
+    });
+
+    // Event listeners
+    document.getElementById('startBtn').addEventListener('click', startTraining);
+
+    // Initialize on load
+    init();
+
+    console.log('⚡ Virtual Training POC with GSAP');
+    console.log('📝 Loading route data from REST API...');
+  </script>
+</body>
+</html>

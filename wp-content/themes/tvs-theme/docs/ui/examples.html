@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVS Design Tokens - Visual Examples</title>
+    <link rel="stylesheet" href="../../assets/css/tvs-tokens.css">
+    <style>
+        body {
+            padding: var(--tvs-space-8);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            margin-bottom: var(--tvs-space-12);
+        }
+        
+        .section-title {
+            color: var(--tvs-color-text-primary);
+            font-size: var(--tvs-text-3xl);
+            font-weight: var(--tvs-font-bold);
+            margin-bottom: var(--tvs-space-6);
+            padding-bottom: var(--tvs-space-3);
+            border-bottom: 2px solid var(--tvs-color-border-accent);
+        }
+        
+        .grid {
+            display: grid;
+            gap: var(--tvs-space-6);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .example-title {
+            color: var(--tvs-color-text-secondary);
+            font-size: var(--tvs-text-sm);
+            font-weight: var(--tvs-font-semibold);
+            text-transform: uppercase;
+            letter-spacing: var(--tvs-tracking-wide);
+            margin-bottom: var(--tvs-space-3);
+        }
+    </style>
+</head>
+<body>
+    <h1 style="
+        color: var(--tvs-color-text-primary);
+        font-size: var(--tvs-text-5xl);
+        font-weight: var(--tvs-font-extrabold);
+        margin-bottom: var(--tvs-space-8);
+        background: var(--tvs-gradient-neon);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    ">
+        TVS Design Tokens
+    </h1>
+
+    <!-- Cards Section -->
+    <section class="section">
+        <h2 class="section-title">Cards</h2>
+        <div class="grid">
+            <div>
+                <div class="example-title">Basic Card</div>
+                <div class="tvs-card">
+                    <h3 style="
+                        color: var(--tvs-color-text-primary);
+                        font-size: var(--tvs-text-xl);
+                        margin-bottom: var(--tvs-space-2);
+                    ">
+                        Norway's Peaks
+                    </h3>
+                    <p style="
+                        color: var(--tvs-color-text-secondary);
+                        font-size: var(--tvs-text-base);
+                        margin: 0;
+                    ">
+                        Explore the most challenging routes in Norway's mountain ranges.
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Card with Badge</div>
+                <div class="tvs-card">
+                    <div style="margin-bottom: var(--tvs-space-3);">
+                        <span class="tvs-badge tvs-badge-neon">FEATURED</span>
+                    </div>
+                    <h3 style="
+                        color: var(--tvs-color-text-primary);
+                        font-size: var(--tvs-text-xl);
+                        margin-bottom: var(--tvs-space-2);
+                    ">
+                        Elite Challenge
+                    </h3>
+                    <p style="
+                        color: var(--tvs-color-text-secondary);
+                        font-size: var(--tvs-text-base);
+                        margin: 0;
+                    ">
+                        Only for the bravest athletes. 100km+ mountain trail.
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Glass Card</div>
+                <div class="tvs-glass" style="
+                    padding: var(--tvs-space-6);
+                    border-radius: var(--tvs-radius-lg);
+                ">
+                    <h3 style="
+                        color: var(--tvs-color-text-primary);
+                        font-size: var(--tvs-text-xl);
+                        margin-bottom: var(--tvs-space-2);
+                    ">
+                        Glassmorphism
+                    </h3>
+                    <p style="
+                        color: var(--tvs-color-text-secondary);
+                        font-size: var(--tvs-text-base);
+                        margin: 0;
+                    ">
+                        Modern glass effect with backdrop blur.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section class="section">
+        <h2 class="section-title">Badges & Chips</h2>
+        <div class="grid">
+            <div>
+                <div class="example-title">Badge Variants</div>
+                <div style="
+                    display: flex;
+                    gap: var(--tvs-space-3);
+                    flex-wrap: wrap;
+                ">
+                    <span class="tvs-badge tvs-badge-primary">Primary</span>
+                    <span class="tvs-badge tvs-badge-accent">Accent</span>
+                    <span class="tvs-badge tvs-badge-neon">Neon</span>
+                    <span class="tvs-badge" style="
+                        background: var(--tvs-color-success);
+                        color: var(--tvs-color-text-on-primary);
+                    ">Success</span>
+                    <span class="tvs-badge" style="
+                        background: var(--tvs-color-warning);
+                        color: var(--tvs-color-text-on-accent);
+                    ">Warning</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Activity Chips</div>
+                <div style="display: flex; flex-direction: column; gap: var(--tvs-space-3);">
+                    <span style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: var(--tvs-space-2);
+                        background: var(--tvs-color-surface-raised);
+                        border: 1px solid var(--tvs-color-border-default);
+                        border-radius: var(--tvs-radius-full);
+                        padding: var(--tvs-space-2) var(--tvs-space-4);
+                        font-size: var(--tvs-text-sm);
+                        color: var(--tvs-color-text-secondary);
+                        width: fit-content;
+                    ">
+                        <span style="
+                            width: 8px;
+                            height: 8px;
+                            background: var(--tvs-color-success);
+                            border-radius: var(--tvs-radius-full);
+                        "></span>
+                        Active Now
+                    </span>
+                    <span style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: var(--tvs-space-2);
+                        background: var(--tvs-color-surface-raised);
+                        border: 1px solid var(--tvs-color-border-default);
+                        border-radius: var(--tvs-radius-full);
+                        padding: var(--tvs-space-2) var(--tvs-space-4);
+                        font-size: var(--tvs-text-sm);
+                        color: var(--tvs-color-text-secondary);
+                        width: fit-content;
+                    ">
+                        <span style="
+                            width: 8px;
+                            height: 8px;
+                            background: var(--tvs-color-warning);
+                            border-radius: var(--tvs-radius-full);
+                        "></span>
+                        In Progress
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Panel -->
+    <section class="section">
+        <h2 class="section-title">Panels & Stats</h2>
+        <div class="grid">
+            <div>
+                <div class="example-title">Stats Card</div>
+                <div class="tvs-card">
+                    <div style="margin-bottom: var(--tvs-space-4);">
+                        <span class="tvs-badge tvs-badge-neon">ELITE</span>
+                    </div>
+                    <div style="
+                        font-size: var(--tvs-text-5xl);
+                        font-weight: var(--tvs-font-extrabold);
+                        color: var(--tvs-color-text-primary);
+                        margin-bottom: var(--tvs-space-2);
+                    ">
+                        1,234
+                    </div>
+                    <div style="
+                        color: var(--tvs-color-text-secondary);
+                        font-size: var(--tvs-text-sm);
+                        text-transform: uppercase;
+                        letter-spacing: var(--tvs-tracking-wide);
+                    ">
+                        Total Kilometers
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Gradient Panel</div>
+                <div style="
+                    background: var(--tvs-gradient-primary);
+                    padding: var(--tvs-space-8);
+                    border-radius: var(--tvs-radius-xl);
+                    text-align: center;
+                ">
+                    <div style="
+                        font-size: var(--tvs-text-4xl);
+                        font-weight: var(--tvs-font-extrabold);
+                        color: var(--tvs-color-text-on-primary);
+                        margin-bottom: var(--tvs-space-2);
+                    ">
+                        42
+                    </div>
+                    <div style="
+                        color: var(--tvs-color-text-on-primary);
+                        font-size: var(--tvs-text-base);
+                        opacity: 0.9;
+                    ">
+                        Completed Challenges
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Glow Effect</div>
+                <div class="tvs-card tvs-glow-primary" style="
+                    text-align: center;
+                ">
+                    <div style="
+                        font-size: var(--tvs-text-3xl);
+                        font-weight: var(--tvs-font-bold);
+                        color: var(--tvs-color-primary);
+                        margin-bottom: var(--tvs-space-2);
+                    ">
+                        ⚡ 856
+                    </div>
+                    <div style="
+                        color: var(--tvs-color-text-secondary);
+                        font-size: var(--tvs-text-sm);
+                    ">
+                        Lightning Points
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Buttons -->
+    <section class="section">
+        <h2 class="section-title">Buttons</h2>
+        <div class="grid">
+            <div>
+                <div class="example-title">Primary Button</div>
+                <button style="
+                    background: var(--tvs-color-primary);
+                    color: var(--tvs-color-text-on-primary);
+                    border: none;
+                    border-radius: var(--tvs-button-radius);
+                    padding: var(--tvs-button-padding-y) var(--tvs-button-padding-x);
+                    font-size: var(--tvs-button-font-size);
+                    font-weight: var(--tvs-button-font-weight);
+                    cursor: pointer;
+                    transition: var(--tvs-transition-all);
+                ">
+                    Start Challenge
+                </button>
+            </div>
+
+            <div>
+                <div class="example-title">Gradient Button</div>
+                <button style="
+                    background: var(--tvs-gradient-warm);
+                    color: var(--tvs-color-text-on-primary);
+                    border: none;
+                    border-radius: var(--tvs-button-radius);
+                    padding: var(--tvs-button-padding-y) var(--tvs-button-padding-x);
+                    font-size: var(--tvs-button-font-size);
+                    font-weight: var(--tvs-button-font-weight);
+                    cursor: pointer;
+                    transition: var(--tvs-transition-all);
+                ">
+                    Join Now
+                </button>
+            </div>
+
+            <div>
+                <div class="example-title">Outline Button</div>
+                <button style="
+                    background: transparent;
+                    color: var(--tvs-color-primary);
+                    border: 2px solid var(--tvs-color-primary);
+                    border-radius: var(--tvs-button-radius);
+                    padding: var(--tvs-button-padding-y) var(--tvs-button-padding-x);
+                    font-size: var(--tvs-button-font-size);
+                    font-weight: var(--tvs-button-font-weight);
+                    cursor: pointer;
+                    transition: var(--tvs-transition-all);
+                ">
+                    Learn More
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Color Palette -->
+    <section class="section">
+        <h2 class="section-title">Color Palette</h2>
+        <div class="grid">
+            <div>
+                <div class="example-title">Background Colors</div>
+                <div style="display: flex; flex-direction: column; gap: var(--tvs-space-2);">
+                    <div style="
+                        background: var(--tvs-color-bg-primary);
+                        padding: var(--tvs-space-3);
+                        border-radius: var(--tvs-radius-md);
+                        border: 1px solid var(--tvs-color-border-subtle);
+                    ">
+                        Primary (#0a0a0b)
+                    </div>
+                    <div style="
+                        background: var(--tvs-color-bg-secondary);
+                        padding: var(--tvs-space-3);
+                        border-radius: var(--tvs-radius-md);
+                        border: 1px solid var(--tvs-color-border-subtle);
+                    ">
+                        Secondary (#16171a)
+                    </div>
+                    <div style="
+                        background: var(--tvs-color-bg-tertiary);
+                        padding: var(--tvs-space-3);
+                        border-radius: var(--tvs-radius-md);
+                        border: 1px solid var(--tvs-color-border-subtle);
+                    ">
+                        Tertiary (#1e2023)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Neon Colors</div>
+                <div style="display: flex; gap: var(--tvs-space-2);">
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-neon-cyan);
+                        border-radius: var(--tvs-radius-md);
+                        box-shadow: var(--tvs-shadow-glow-cyan);
+                    "></div>
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-neon-magenta);
+                        border-radius: var(--tvs-radius-md);
+                        box-shadow: var(--tvs-shadow-glow-magenta);
+                    "></div>
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-neon-lime);
+                        border-radius: var(--tvs-radius-md);
+                    "></div>
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-neon-orange);
+                        border-radius: var(--tvs-radius-md);
+                    "></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="example-title">Semantic Colors</div>
+                <div style="display: flex; gap: var(--tvs-space-2);">
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-success);
+                        border-radius: var(--tvs-radius-md);
+                    "></div>
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-warning);
+                        border-radius: var(--tvs-radius-md);
+                    "></div>
+                    <div style="
+                        width: 50px;
+                        height: 50px;
+                        background: var(--tvs-color-error);
+                        border-radius: var(--tvs-radius-md);
+                    "></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography -->
+    <section class="section">
+        <h2 class="section-title">Typography</h2>
+        <div class="tvs-panel">
+            <div style="
+                color: var(--tvs-color-text-primary);
+                font-size: var(--tvs-text-6xl);
+                font-weight: var(--tvs-font-extrabold);
+                line-height: var(--tvs-leading-tight);
+                margin-bottom: var(--tvs-space-4);
+            ">
+                Heading 1
+            </div>
+            <div style="
+                color: var(--tvs-color-text-primary);
+                font-size: var(--tvs-text-4xl);
+                font-weight: var(--tvs-font-bold);
+                line-height: var(--tvs-leading-tight);
+                margin-bottom: var(--tvs-space-4);
+            ">
+                Heading 2
+            </div>
+            <div style="
+                color: var(--tvs-color-text-primary);
+                font-size: var(--tvs-text-2xl);
+                font-weight: var(--tvs-font-semibold);
+                line-height: var(--tvs-leading-snug);
+                margin-bottom: var(--tvs-space-4);
+            ">
+                Heading 3
+            </div>
+            <div style="
+                color: var(--tvs-color-text-primary);
+                font-size: var(--tvs-text-base);
+                line-height: var(--tvs-leading-normal);
+                margin-bottom: var(--tvs-space-2);
+            ">
+                Body text with primary color. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </div>
+            <div style="
+                color: var(--tvs-color-text-secondary);
+                font-size: var(--tvs-text-sm);
+                line-height: var(--tvs-leading-normal);
+            ">
+                Secondary text for less important information or metadata.
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tvs/connect-strava",
+  "title": "Connect Strava",
+  "category": "widgets",
+  "icon": "dashicons-admin-network",
+  "editorScript": "tvs-theme-blocks",
+  "render": "file:./render.php",
+  "style": "file:./style.css",
+  "supports": { "align": ["wide", "full"] },
+  "textdomain": "tvs-virtual-sports"
+}

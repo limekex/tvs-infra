@@ -1,0 +1,16 @@
+<!-- My activities dashboard page template (requires login) -->
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"tvs-main"} -->
+<main class="wp-block-group alignfull tvs-main">
+	<!-- wp:group {"className":"tvs-container tvs-stack"} -->
+	<div class="wp-block-group tvs-container tvs-stack">
+		<h1>Mine aktiviteter</h1>
+		<!-- If the block/shortcode exists, render it; otherwise this serves as a landing -->
+		<!-- wp:shortcode -->[tvs_my_activities]<!-- /wp:shortcode -->
+	</div>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->
