@@ -105,10 +105,13 @@ MVP stores favourites per-user; extend with a global count for efficient top lis
 - Should anonymous users be able to queue favourites (e.g., prompt to log in)?
 
 ## Tasks
-- [ ] Extend favourites toggle to update `tvs_fav_count` and return `totalCount`
-- [ ] Add endpoint: GET /tvs/v1/favorites/top
-- [ ] Block: tvs/my-favourites (SSR)
-- [ ] Block: tvs/people-favourites (SSR)
-- [ ] Tokens/UI polish for count pill
+- [x] Extend favourites toggle to update `tvs_fav_count` and return `totalCount`
+- [x] Add endpoint: GET /tvs/v1/favorites/top
+- [x] Block: tvs/my-favourites (SSR)
+- [x] Block: tvs/people-favourites (SSR)
+- [x] Tokens/UI polish for count pill
+- [x] Fallback image for routes without featured images (ActivityDymmy2-300x200.jpg)
+- [x] CSS aspect-ratio fix for favourites grid layout (title visibility)
+- [x] Query optimization: Changed from post_meta to user_meta aggregation
 - [ ] Docs: usage, attributes, examples
 - [ ] QA checklist (logged-in/out, pagination, empty states)
