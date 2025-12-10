@@ -1,0 +1,87 @@
+.tvs-route-card{
+	position:relative;
+	overflow:hidden;
+	border-radius: var(--tvs-card-radius);
+	min-height:220px;
+	background: var(--tvs-color-bg-secondary);
+	box-shadow: var(--tvs-card-shadow);
+}
+.tvs-route-card__bg{
+	position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.8);
+	transition: var(--tvs-transition-transform), var(--tvs-transition-opacity, opacity .25s ease-out), filter var(--tvs-duration-normal) var(--tvs-ease-out);
+}
+.tvs-route-card__overlay{
+	position:relative;z-index:1;display:flex;flex-direction:column;justify-content:space-between;height:100%;
+	padding: var(--tvs-space-5);
+	color: var(--tvs-color-text-primary);
+}
+.tvs-route-card__title{margin:0 0 .25rem;font-size:var(--tvs-text-xl)}
+.tvs-route-card__badges{display:flex;gap:var(--tvs-space-2);flex-wrap:wrap}
+.tvs-badge{background:var(--tvs-color-glass-dark);padding:var(--tvs-space-1) var(--tvs-space-3);border-radius:var(--tvs-radius-full);font-size:var(--tvs-text-xs);border:1px solid var(--tvs-glass-border)}
+.tvs-route-card__difficulty{display:flex;gap:var(--tvs-space-1);margin-left:auto}
+.tvs-diff-dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--tvs-color-primary);display:inline-block;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
+
+/* Stats box - tokenized, with placements */
+.tvs-route-card__stats{
+	display:flex;
+	gap: var(--tvs-space-3);
+	flex-wrap: wrap;
+}
+.tvs-route-card__stats .meta-item{
+	display:inline-flex;align-items:center;gap: var(--tvs-space-2);
+	font-size: var(--tvs-text-base);
+	color: var(--tvs-color-text-primary);
+	background: var(--tvs-color-glass-dark);
+	border: 1px solid var(--tvs-glass-border);
+	border-radius: var(--tvs-radius-full);
+	padding: 4px var(--tvs-space-3);
+	backdrop-filter: blur(var(--tvs-glass-blur));
+	-webkit-backdrop-filter: blur(var(--tvs-glass-blur));
+	font-weight: var(--tvs-font-semibold);
+}
+
+/* Default: bottom inside overlay */
+.tvs-route-card__stats--bottom{ margin-top: var(--tvs-space-3); }
+
+/* Left/Right: position as an attached glass panel */
+.tvs-route-card__stats--left,
+.tvs-route-card__stats--right{
+	position: absolute;
+	top: var(--tvs-space-4);
+	bottom: auto;
+	left: var(--tvs-space-4);
+	right: auto;
+	background: var(--tvs-glass-bg);
+	border: 1px solid var(--tvs-glass-border);
+	border-radius: var(--tvs-radius-xl);
+	padding: var(--tvs-space-3);
+}
+.tvs-route-card__stats--right{ left: auto; right: var(--tvs-space-4); }
+
+/* Hover effects */
+.tvs-route-card:hover .tvs-route-card__bg{ filter: blur(3px) brightness(.9); transform: scale(1.03); }
+
+/* CTA button */
+.tvs-route-card__cta-wrap {
+	margin-top: var(--tvs-space-4);
+	display: flex;
+	justify-content: center;
+}
+.tvs-route-card__cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--tvs-space-2);
+	padding: 10px var(--tvs-space-5);
+	border-radius: var(--tvs-radius-full);
+	background: var(--tvs-color-primary);
+	color: #fff;
+	text-decoration: none;
+	font-weight: var(--tvs-font-semibold);
+	box-shadow: var(--tvs-elevation-2, 0 2px 6px rgba(0,0,0,.12));
+	transition: transform var(--tvs-duration-fast, .15s) var(--tvs-ease-out),
+		box-shadow var(--tvs-duration-fast, .15s) var(--tvs-ease-out),
+		filter var(--tvs-duration-fast, .15s) var(--tvs-ease-out);
+}
+.tvs-route-card__cta:hover { filter: brightness(1.05); box-shadow: var(--tvs-elevation-3, 0 4px 10px rgba(0,0,0,.16)); }
+.tvs-route-card__cta:active { transform: translateY(1px); }

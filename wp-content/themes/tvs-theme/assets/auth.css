@@ -1,0 +1,218 @@
+/* TVS Auth screens polish (scoped) */
+.tvs-auth {
+  color: var(--tvs-color-text-primary);
+}
+
+/* Glassmorphism + tertiary background for panels */
+.tvs-auth .tvs-panel {
+  background: var(--tvs-color-bg-tertiary);
+  border-radius: var(--tvs-panel-radius);
+}
+.tvs-auth .tvs-panel.tvs-glass {
+  background: var(--tvs-glass-bg);
+  border: 1px solid var(--tvs-glass-border);
+  backdrop-filter: blur(var(--tvs-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tvs-glass-blur));
+}
+
+/* Also apply glass to the Strava card */
+.tvs-auth .tvs-card.tvs-glass {
+  background: var(--tvs-glass-bg);
+  border: 1px solid var(--tvs-glass-border);
+  backdrop-filter: blur(var(--tvs-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tvs-glass-blur));
+}
+
+/* Two-column grid on larger screens, stacked on small */
+.tvs-auth .tvs-auth-grid {
+  display: grid;
+  gap: var(--tvs-space-8);
+}
+@media (min-width: 960px) {
+  .tvs-auth .tvs-auth-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Register page: wider form column (2fr 1fr) */
+@media (min-width: 960px) {
+  .tvs-auth.tvs-auth--register .tvs-auth-grid { grid-template-columns: 2fr 1fr; }
+}
+
+/* Top links row above forms */
+.tvs-auth .tvs-auth-toplinks {
+  display: flex;
+  align-items: center;
+  gap: var(--tvs-space-3);
+  margin-bottom: var(--tvs-space-2);
+}
+@media (min-width: 960px) {
+  .tvs-auth .tvs-auth-toplinks { justify-content: flex-end; }
+}
+
+/* Keep content packed to the top inside auth panels; leave extra space at the bottom */
+.tvs-auth .tvs-stack {
+  align-content: start; /* Prevent distributing free vertical space between rows */
+}
+
+/* Make the Strava card slightly tighter to appear more compact */
+.tvs-auth .tvs-card.tvs-stack {
+  gap: var(--tvs-space-4);
+}
+
+/* Do not stretch the Strava card to full height */
+.tvs-auth .tvs-card.tvs-stack { align-self: start; }
+
+/* Reduce spacing between form rows and field groups */
+.tvs-auth form.tvs-stack { gap: var(--tvs-space-3); }
+.tvs-auth form.tvs-stack > .tvs-stack { gap: var(--tvs-space-2); }
+
+/* Form fields: tertiary bg, white text, rounded corners */
+.tvs-auth input[type="text"],
+.tvs-auth input[type="password"],
+.tvs-auth input[type="email"],
+.tvs-auth select,
+.tvs-auth textarea { 
+  background: var(--tvs-color-bg-tertiary);
+  color: #fff;
+  border: 1px solid var(--tvs-color-border-subtle);
+  border-radius: var(--tvs-radius-md);
+  padding: var(--tvs-space-3) var(--tvs-space-4);
+}
+.tvs-auth input::placeholder,
+.tvs-auth textarea::placeholder { color: var(--tvs-color-text-tertiary); }
+
+/* Buttons: tokenized */
+.tvs-auth .tvs-btn,
+.tvs-auth .button.tvs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tvs-space-2);
+  border-radius: var(--tvs-button-radius);
+  padding: var(--tvs-button-padding-y) var(--tvs-button-padding-x);
+  font-size: var(--tvs-button-font-size);
+  font-weight: var(--tvs-button-font-weight);
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--tvs-transition-colors), var(--tvs-transition-shadow);
+}
+.tvs-auth .tvs-btn { 
+  background: var(--tvs-color-primary);
+  color: var(--tvs-color-text-on-primary);
+}
+.tvs-auth .tvs-btn:hover { box-shadow: var(--tvs-shadow-md); }
+
+/* Accent variant (e.g., Strava button wrapper) */
+.tvs-auth .tvs-btn--accent {
+  background: var(--tvs-color-accent);
+  color: var(--tvs-color-text-on-accent);
+  border-color: var(--tvs-color-border-accent);
+}
+
+/* Strava brand variant */
+.tvs-auth .tvs-btn--strava {
+  background: #fc4c02; /* Strava Orange */
+  color: #fff;
+  border-color: #e04402;
+  /* Slightly reduce overall padding to make the button feel tighter */
+  padding: calc(var(--tvs-button-padding-y) - var(--tvs-space-1)) calc(var(--tvs-button-padding-x) - var(--tvs-space-1));
+}
+.tvs-auth .tvs-btn--strava:hover {
+  box-shadow: var(--tvs-shadow-md);
+  filter: brightness(1.05);
+}
+
+/* Icon inside token buttons */
+.tvs-auth .tvs-btn .tvs-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em; /* Enlarge Strava icon */
+  line-height: 1;
+}
+.tvs-auth .tvs-btn .tvs-icon svg { display: block; }
+
+/* Official Strava image button wrapper */
+.tvs-auth .tvs-strava-img-btn {
+  display: inline-block;
+  line-height: 0; /* remove inline gaps around image */
+}
+.tvs-auth .tvs-strava-img-btn img {
+  display: block;
+  height: 44px; /* typical recommended height; scales well */
+  width: auto;
+}
+
+/* Outline variant for secondary links (login/register links) */
+.tvs-auth .tvs-btn--outline {
+  background: transparent;
+  color: var(--tvs-color-accent);
+  border-color: var(--tvs-color-border-accent);
+}
+.tvs-auth .tvs-btn--outline:hover {
+  background: var(--tvs-color-glass-light);
+}
+
+/* Badge link normalization inside labels */
+.tvs-auth .tvs-badge { text-decoration: none; }
+.tvs-auth label a.tvs-badge { display: inline-block; }
+
+/* Full-width buttons */
+.tvs-auth .tvs-btn--block { width: 100%; }
+
+/* Status and alert styles */
+.tvs-auth .tvs-status { min-height: 1.25em; }
+.tvs-auth .tvs-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--tvs-space-3);
+  border-radius: var(--tvs-radius-md);
+  padding: var(--tvs-space-3) var(--tvs-space-4);
+  border: 1px solid var(--tvs-color-border-subtle);
+  background: var(--tvs-color-glass-light);
+  color: var(--tvs-color-text-primary);
+}
+.tvs-auth .tvs-alert--warning {
+  border-color: var(--tvs-color-warning);
+  background: color-mix(in oklab, var(--tvs-color-warning) 10%, transparent);
+  color: var(--tvs-color-warning);
+}
+.tvs-auth .tvs-alert--success {
+  border-color: var(--tvs-color-success);
+  background: color-mix(in oklab, var(--tvs-color-success) 10%, transparent);
+  color: var(--tvs-color-success);
+}
+.tvs-auth .tvs-alert--error {
+  border-color: var(--tvs-color-error);
+  background: color-mix(in oklab, var(--tvs-color-error) 10%, transparent);
+  color: var(--tvs-color-error);
+}
+
+/* Input error state */
+.tvs-auth .tvs-input-error { border-color: var(--tvs-color-error) !important; }
+.tvs-auth .tvs-hint { color: var(--tvs-color-text-tertiary); }
+
+/* Disabled buttons appear greyed out */
+.tvs-auth .tvs-btn:disabled,
+.tvs-auth .button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+  box-shadow: none;
+}
+
+/* Password strength & match hints */
+.tvs-auth .tvs-password-strength,
+.tvs-auth .tvs-password-match { font-size: 0.85em; min-height: 1em; }
+.tvs-auth .tvs-password-strength.is-weak { color: var(--tvs-color-error); }
+.tvs-auth .tvs-password-strength.is-medium { color: var(--tvs-color-warning); }
+.tvs-auth .tvs-password-strength.is-strong { color: var(--tvs-color-success); }
+.tvs-auth .tvs-password-match.is-ok { color: var(--tvs-color-success); }
+.tvs-auth .tvs-password-match.is-bad { color: var(--tvs-color-error); }
+
+/* Field-level validation errors */
+.tvs-auth .tvs-field-error {
+  color: var(--tvs-color-error);
+  font-size: 0.85em;
+  min-height: 1em;
+}

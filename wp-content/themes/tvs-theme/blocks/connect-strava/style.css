@@ -1,0 +1,33 @@
+.tvs-connect-strava{padding:var(--tvs-space-5);border:1px solid var(--tvs-color-border-subtle);border-radius:var(--tvs-radius-xl);background:var(--tvs-panel-bg)}
+.tvs-connect-strava__actions{display:flex;gap:var(--tvs-space-3);flex-wrap:wrap;margin:var(--tvs-space-3) 0}
+.tvs-connect-strava__state{color:var(--tvs-color-text-secondary);margin:0}
+.tvs-connect-strava__heading{margin:0;color:var(--tvs-color-text-primary);font-size:var(--tvs-text-xl)}
+.tvs-connect-strava__hint{font-size:var(--tvs-text-sm);color:var(--tvs-color-text-tertiary);margin:var(--tvs-space-2) 0 0}
+
+/* Brand compliant button using Strava orange */
+.tvs-strava-btn{
+	display:inline-flex;align-items:center;gap:var(--tvs-space-2);
+	background:#fc4c02;color:#fff;text-decoration:none;
+	border-radius: var(--tvs-radius-md);
+	padding: var(--tvs-button-padding-y) var(--tvs-button-padding-x);
+	font-weight: var(--tvs-font-semibold);
+	transition: var(--tvs-transition-shadow), var(--tvs-transition-transform);
+	box-shadow: var(--tvs-shadow-sm);
+}
+.tvs-strava-btn:hover{ box-shadow: var(--tvs-shadow-md); transform: translateY(-1px); }
+.tvs-strava-btn__icon{ width:18px; height:18px; display:inline-block; background: currentColor; mask: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 50 50%22 fill=%22%23fff%22><path d=%22M25 0l12.5 21.6h-8.3L25 8.3l-4.2 7.5H12.5L25 0zM37.5 28.4L50 50h-8.3L37.5 39.1 33.3 50H25l12.5-21.6z%22/></svg>') center / contain no-repeat; }
+
+/* TVS outlined button for login/register */
+.tvs-btn{
+	display:inline-flex;align-items:center;gap:var(--tvs-space-2);
+	border-radius: var(--tvs-radius-md);
+	padding: var(--tvs-button-padding-y) var(--tvs-button-padding-x);
+	font-weight: var(--tvs-font-semibold);
+	text-decoration: none;
+}
+.tvs-btn--outline{
+	color: var(--tvs-color-text-primary);
+	background: transparent;
+	border: 1px solid var(--tvs-color-border-default);
+}
+.tvs-btn--outline:hover{ border-color: var(--tvs-color-border-accent); color: var(--tvs-color-text-primary); }

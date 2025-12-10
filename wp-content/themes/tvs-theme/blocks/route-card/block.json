@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tvs/route-card",
+  "title": "Route Card",
+  "category": "widgets",
+  "icon": "location",
+  "editorScript": "tvs-theme-blocks",
+  "style": "file:./style.css",
+  "render": "file:./render.php",
+  "textdomain": "tvs-virtual-sports",
+  "attributes": {
+    "routeId": { "type": "number" },
+    "showMeta": { "type": "boolean", "default": true },
+    "showCTA": { "type": "boolean", "default": true },
+    "ctaLabel": { "type": "string", "default": "View route" },
+    "metaPlacement": {
+      "type": "string",
+      "enum": ["bottom", "left", "right"],
+      "default": "bottom"
+    }
+  }
+}

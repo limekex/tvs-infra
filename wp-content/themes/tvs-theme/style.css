@@ -1,0 +1,478 @@
+/*
+Theme Name: Norway Virtual Sports
+Theme URI:  https://virtualsports.online
+Author:      BeTA iT
+Author URI:  https://virtualsports.online
+Description: Block-first theme for Norway Virtual Sport (TVS). Lightweight, mobile-first, FSE-ready.
+Version:     0.1.3
+License:     GPLv2+
+Text Domain: norway-virtual-sports
+Tags: full-site-editing, one-column, accessibility-ready
+*/
+
+.tvs-container {
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: var(--tvs-space-4);
+	padding-right: var(--tvs-space-4);
+}
+
+/* Header */
+.tvs-header {
+	background: var(--tvs-color-bg-secondary);
+	border-bottom: 1px solid var(--tvs-color-border-subtle);
+	color: var(--tvs-color-text-primary);
+	padding-top: var(--tvs-space-3);
+	padding-bottom: var(--tvs-space-3);
+	/* Default header height variable used for mobile dropdown max-height */
+	--tvs-header-height: 64px;
+}
+
+.tvs-header .tvs-brand {
+	gap: var(--tvs-space-3);
+}
+
+.tvs-header .wp-block-site-title a {
+	color: var(--tvs-color-text-primary);
+	text-decoration: none;
+}
+
+/* Navigation main container spacing */
+.tvs-nav .wp-block-navigation__container {
+	gap: var(--tvs-space-2); /* Add spacing between nav items */
+}
+
+/* Main navigation items - compact height */
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > a,
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > button {
+	color: var(--tvs-color-text-primary);
+	padding: 0.375rem 0.875rem; /* Even smaller for compact look */
+	border-radius: var(--tvs-radius-sm);
+	transition: var(--tvs-transition-colors), var(--tvs-transition-shadow);
+	display: inline-flex;
+	align-items: center; /* Vertically center text and icon */
+	gap: 0.375rem; /* Tight space between text and icon */
+	line-height: 1.5; /* Control line height */
+}
+
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > a:hover,
+.tvs-nav .wp-block-navigation__container > .wp-block-navigation-item > a:focus {
+	color: var(--tvs-color-primary);
+	background: var(--tvs-color-glass-light);
+}
+
+/* Navigation: submenu levels (desktop) */
+.tvs-header .wp-block-navigation__submenu-container {
+	background: #18181b !important; /* Very dark, almost black background */
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: var(--tvs-radius-md);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); /* Strong shadow */
+	padding: 0.5rem 0;
+	min-width: 220px;
+	margin-top: 0; /* Remove gap - creates a bridge for hover */
+	padding-top: 0.75rem; /* Add internal padding instead */
+}
+
+/* Create invisible bridge between menu item and submenu */
+.tvs-header .wp-block-navigation-item.has-child:hover > .wp-block-navigation__submenu-container,
+.tvs-header .wp-block-navigation-item.has-child:focus-within > .wp-block-navigation__submenu-container {
+	display: block;
+}
+
+/* Keep submenu open when hovering over parent or submenu */
+.tvs-header .wp-block-navigation-item.has-child {
+	position: relative;
+}
+
+.tvs-header .wp-block-navigation-item.has-child > a,
+.tvs-header .wp-block-navigation-item.has-child > button {
+	padding-bottom: 0.625rem; /* Extra bottom padding to bridge gap */
+}
+
+.tvs-header .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+	background: rgba(20, 20, 24, 0.95); /* Even darker for nested submenus */
+	margin-top: 0;
+	margin-left: var(--tvs-space-1);
+}
+
+/* Submenu items */
+.tvs-header .wp-block-navigation__submenu-container .wp-block-navigation-item {
+	margin: 0;
+}
+
+.tvs-header .wp-block-navigation__submenu-container a,
+.tvs-header .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	color: rgba(255, 255, 255, 0.9); /* Lighter text for dark background */
+	padding: 0.625rem 1.25rem; /* Balanced padding */
+	display: flex;
+	align-items: center; /* Center text vertically */
+	transition: var(--tvs-transition-colors);
+	font-size: 0.9375rem;
+	min-height: 2.5rem; /* Consistent height */
+}
+
+.tvs-header .wp-block-navigation__submenu-container a:hover,
+.tvs-header .wp-block-navigation__submenu-container a:focus {
+	background: var(--tvs-color-glass-light);
+	color: var(--tvs-color-primary);
+}
+
+/* Submenu icon (dropdown arrow) - properly aligned */
+.tvs-header .wp-block-navigation__submenu-icon {
+	color: var(--tvs-color-text-secondary) !important;
+	width: 10px !important;
+	height: 10px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	transition: transform 0.2s ease, color 0.2s ease;
+	flex-shrink: 0;
+	display: inline-block !important;
+	opacity: 1 !important;
+	visibility: visible !important;
+}
+
+/* Fix WordPress SVG alignment */
+.tvs-header .wp-block-navigation__submenu-icon svg {
+	display: block !important;
+	width: 100% !important;
+	height: 100% !important;
+	vertical-align: middle;
+	fill: currentColor;
+}
+
+/* Rotate arrow when submenu is open (if WordPress adds .is-open class) */
+.tvs-header .wp-block-navigation-item.has-child:hover .wp-block-navigation__submenu-icon,
+.tvs-header .wp-block-navigation-item.has-child:focus-within .wp-block-navigation__submenu-icon {
+	color: var(--tvs-color-primary);
+	transform: rotate(180deg);
+}
+
+/* Better hover state for parent items with submenus */
+.tvs-header .has-child > a:hover,
+.tvs-header .has-child > .wp-block-navigation-item__content:hover {
+	background: var(--tvs-color-glass-light);
+	color: var(--tvs-color-primary);
+}
+
+/* Footer */
+.tvs-footer {
+	background: var(--tvs-color-bg-secondary);
+	border-top: 1px solid var(--tvs-color-border-subtle);
+	color: var(--tvs-color-text-secondary);
+	padding-top: var(--tvs-space-6);
+	padding-bottom: var(--tvs-space-6);
+}
+
+.tvs-footer-grid {
+	row-gap: var(--tvs-space-6);
+}
+
+.tvs-footer a { color: var(--tvs-color-text-primary); }
+.tvs-footer a:hover { color: var(--tvs-color-primary); }
+
+.tvs-footer-legal {
+	border-top: 1px solid var(--tvs-color-border-subtle);
+	margin-top: var(--tvs-space-6);
+	padding-top: var(--tvs-space-4);
+	font-size: var(--tvs-text-sm);
+	color: var(--tvs-color-text-tertiary);
+}
+
+.tvs-main,
+.wp-site-blocks > main,
+main {
+	padding-top: var(--tvs-space-8);
+	padding-bottom: var(--tvs-space-8);
+}
+
+.tvs-stack {
+	display: grid;
+	gap: var(--tvs-space-6);
+}
+
+/* WP Navigation burger & overlay (mobile-first) */
+.tvs-header .wp-block-navigation__responsive-container-open,
+.tvs-header .wp-block-navigation__responsive-close {
+	color: var(--tvs-color-text-primary);
+	background: transparent;
+	padding: var(--tvs-space-2) var(--tvs-space-3);
+	border-radius: var(--tvs-radius-sm);
+}
+
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open {
+	background: transparent; /* dropdown, no modal panel */
+	color: var(--tvs-color-text-primary);
+	box-shadow: none;
+	border: 0;
+}
+
+/* Ensure the inner content panel of the mobile modal inherits the dark theme */
+
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+    background: var(--tvs-color-bg-tertiary) !important;
+    padding: var(--tvs-button-padding-x) !important;
+    margin-top: var(--tvs-space-12) !important;
+}
+
+/* Links inside the mobile modal */
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container a,
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+	color: var(--tvs-color-text-primary);
+}
+
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container a:hover,
+.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container a:focus {
+	background: var(--tvs-color-glass-light);
+	color: var(--tvs-color-primary);
+}
+
+/* Transform the mobile "overlay" into a full-width dropdown panel under the header */
+@media (max-width: 960px) {
+	.tvs-header .wp-block-navigation__responsive-container.is-menu-open {
+		display: block !important;
+		/* Make the dropdown independent of the header flow to avoid shifting the header */
+		position: fixed !important;
+		top: var(--tvs-header-height);
+		left: 0;
+		right: 0;
+		inset-inline: 0;
+		width: 100%;
+		max-width: 100%;
+		border-left: 0;
+		border-right: 0;
+		border-bottom: 1px solid var(--tvs-color-border-subtle);
+		box-shadow: none;
+		z-index: var(--tvs-z-sticky);
+	}
+
+	.tvs-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+		padding: var(--tvs-space-2) 0;
+		/* Fill the viewport below the header without affecting layout */
+		height: calc(100vh - var(--tvs-header-height));
+		height: calc(100dvh - var(--tvs-header-height));
+		overflow-y: auto;
+	}
+
+	/* Hide overlay and close header to eliminate modal chrome */
+	.tvs-header .wp-block-navigation__responsive-overlay,
+	.tvs-header .wp-block-navigation__responsive-container-header { display: none !important; }
+	/* Keep the wrapper visible but hide only the close button */
+	.tvs-header .wp-block-navigation__responsive-close { display: block !important; background: transparent !important; }
+	.tvs-header .wp-block-navigation__responsive-container-close { display: none !important; }
+
+	/* Flatten the dialog container */
+	.tvs-header .wp-block-navigation__responsive-dialog {
+		position: static !important;
+		inset: auto !important;
+		width: 100% !important;
+		max-width: none !important;
+		background: transparent !important;
+		box-shadow: none !important;
+		border: 0 !important;
+	}
+
+	/* Center menu items horizontally, stack vertically */
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--tvs-space-1);
+		width: 100%;
+		padding: var(--tvs-space-2) 0;
+	}
+
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container > .wp-block-navigation-item > a,
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+		width: 100%;
+		text-align: center;
+		padding: var(--tvs-space-3) var(--tvs-space-4);
+	}
+
+	/* Nested submenus keep readable backgrounds */
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__submenu-container {
+		background: var(--tvs-color-bg-secondary);
+	}
+	.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+		background: var(--tvs-color-bg-tertiary);
+	}
+
+	/* Ensure body remains scrollable even when menu is open */
+	body.has-modal-open { overflow: auto !important; }
+}
+
+.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container a {
+	color: var(--tvs-color-text-primary);
+	/* Larger touch targets on mobile menu */
+	padding: var(--tvs-space-4) var(--tvs-space-5);
+	display: block;
+}
+
+/* Navigation: levels within overlay (mobile). We keep one panel (primary), but ensure nested items remain readable */
+.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container .has-child .wp-block-navigation__submenu-container {
+	background: var(--tvs-color-bg-secondary);
+}
+.tvs-header .wp-block-navigation__responsive-container .wp-block-navigation__container .has-child .wp-block-navigation__submenu-container .wp-block-navigation__submenu-container {
+	background: var(--tvs-color-bg-tertiary);
+}
+
+/* Strong override for WP default white modal background on open */
+.tvs-header .wp-block-navigation:not(.has-background) .wp-block-navigation__responsive-container.is-menu-open {
+	background: transparent !important;
+}
+.tvs-header .wp-block-navigation__responsive-dialog {
+	background: transparent !important;
+}
+
+
+/* Responsive reductions for small screens */
+@media (max-width: 640px) {
+	.tvs-main,
+	.wp-site-blocks > main,
+	main {
+		padding-top: var(--tvs-space-6);
+		padding-bottom: var(--tvs-space-6);
+	}
+}
+
+@media (max-width: 420px) {
+	.tvs-main,
+	.wp-site-blocks > main,
+	main {
+		padding-top: var(--tvs-space-4);
+		padding-bottom: var(--tvs-space-4);
+	}
+}
+
+/* .tvs-routes-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: var(--tvs-space-6);
+	margin-top: var(--tvs-space-8);
+}
+
+.tvs-route-card {
+	background: var(--tvs-card-bg);
+	border: 1px solid var(--tvs-card-border);
+	border-radius: var(--tvs-card-radius);
+	box-shadow: var(--tvs-card-shadow);
+	transition: var(--tvs-transition-transform), var(--tvs-transition-shadow);
+} */
+
+.tvs-route-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--tvs-card-shadow-hover);
+}
+
+.tvs-route-card h3 {
+	margin-top: 0;
+	margin-bottom: var(--tvs-space-2);
+	font-size: var(--tvs-text-xl);
+	color: var(--tvs-color-text-primary);
+}
+
+.tvs-route-card .route-meta {
+	color: var(--tvs-color-text-secondary);
+	font-size: var(--tvs-text-sm);
+	margin: 0;
+}
+
+/* Auth Required CTA */
+.tvs-auth-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 60vh;
+	padding: var(--tvs-space-8) var(--tvs-space-4);
+}
+
+.tvs-auth-required-page .tvs-main {
+	padding-top: var(--tvs-space-8);
+	padding-bottom: var(--tvs-space-8);
+}
+
+.tvs-auth-card {
+	background: var(--tvs-color-bg-secondary);
+	border: 1px solid var(--tvs-color-border-subtle);
+	border-radius: var(--tvs-radius-lg);
+	padding: var(--tvs-space-8) var(--tvs-space-6);
+	max-width: 600px;
+	width: 100%;
+	text-align: center;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.tvs-auth-card h1 {
+	font-size: var(--tvs-text-3xl);
+	color: var(--tvs-color-text-primary);
+	margin: 0 0 var(--tvs-space-4);
+}
+
+.tvs-auth-card p {
+	font-size: var(--tvs-text-lg);
+	color: var(--tvs-color-text-secondary);
+	line-height: 1.6;
+	margin: 0 0 var(--tvs-space-6);
+}
+
+.tvs-auth-buttons {
+	display: flex;
+	gap: var(--tvs-space-4);
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.tvs-btn {
+	display: inline-block;
+	padding: var(--tvs-space-3) var(--tvs-space-5);
+	font-size: var(--tvs-text-base);
+	font-weight: 500;
+	text-decoration: none;
+	border-radius: var(--tvs-radius-md);
+	transition: all 0.2s ease;
+	cursor: pointer;
+	border: 1px solid transparent;
+}
+
+.tvs-btn-primary {
+	background: var(--tvs-color-primary);
+	color: white;
+}
+
+.tvs-btn-primary:hover {
+	background: var(--tvs-color-primary-hover, #2563eb);
+	transform: translateY(-1px);
+}
+
+.tvs-btn-outline {
+	background: transparent;
+	border-color: var(--tvs-color-border);
+	color: var(--tvs-color-text-primary);
+}
+
+.tvs-btn-outline:hover {
+	background: var(--tvs-color-glass-light);
+	border-color: var(--tvs-color-primary);
+}
+
+@media (max-width: 640px) {
+	.tvs-auth-card {
+		padding: var(--tvs-space-6) var(--tvs-space-4);
+	}
+	
+	.tvs-auth-card h1 {
+		font-size: var(--tvs-text-2xl);
+	}
+	
+	.tvs-auth-card p {
+		font-size: var(--tvs-text-base);
+	}
+	
+	.tvs-auth-buttons {
+		flex-direction: column;
+	}
+	
+	.tvs-btn {
+		width: 100%;
+	}
+}

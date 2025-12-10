@@ -1,0 +1,47 @@
+<!-- Login page template -->
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"tvs-main"} -->
+<main class="wp-block-group alignfull tvs-main">
+	<!-- wp:group {"className":"tvs-container tvs-stack"} -->
+    <div class="wp-block-group tvs-container tvs-stack tvs-auth">
+		<h1>Sign in</h1>
+
+		<!-- Top CTA above forms -->
+		<div class="tvs-auth-toplinks">
+			<span class="tvs-text-tertiary">Not registered?</span>
+			<a class="tvs-btn tvs-btn--outline" href="/register/">Create an account now!</a>
+		</div>
+
+		<div class="tvs-auth-grid">
+		<section class="tvs-panel tvs-glass tvs-stack">
+			<h2 class="tvs-text-primary">With username</h2>
+			<form id="tvs-login-form" class="tvs-stack" novalidate>
+				<div class="tvs-stack">
+					<label for="login_username">Username</label>
+					<input id="login_username" name="username" type="text" autocomplete="username" required />
+				</div>
+				<div class="tvs-stack">
+					<label for="login_password">Password</label>
+					<input id="login_password" name="password" type="password" autocomplete="current-password" required />
+				</div>
+				<div class="tvs-stack">
+					<button type="submit" class="button tvs-btn">Sign in</button>
+					<div id="tvs-login-status" class="tvs-status"></div>
+				</div>
+			</form>
+		</section>
+
+		<section class="tvs-card tvs-glass tvs-stack">
+			<h2 class="tvs-text-primary">Sign in with Strava</h2>
+			<div id="strava-connect-btn">
+				<p class="tvs-text-tertiary tvs-text-sm">Loading Strava button…</p>
+			</div>
+		</section>
+		</div>
+	</div>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->

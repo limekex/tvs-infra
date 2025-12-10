@@ -1,0 +1,112 @@
+<!-- Register page template -->
+<!-- wp:template-part {"slug":"header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"tvs-main"} -->
+<main class="wp-block-group alignfull tvs-main">
+	<!-- wp:group {"className":"tvs-container tvs-stack"} -->
+	<div class="wp-block-group tvs-container tvs-stack tvs-auth tvs-auth--register">
+		<h1>Create account</h1>
+
+		<!-- Top CTA above forms -->
+		<div class="tvs-auth-toplinks">
+			<span class="tvs-text-tertiary">Already have an account?</span>
+			<a class="tvs-btn tvs-btn--outline" href="/login/">Sign in</a>
+		</div>
+
+		<div class="tvs-auth-grid">
+		<!-- Registration Panel -->
+		<section class="tvs-panel tvs-glass tvs-stack">
+			<h2 class="tvs-text-primary">Register with username</h2>
+			<form id="tvs-register-form" class="tvs-stack" novalidate>
+				<div class="tvs-stack" id="tvs-invite-field-group" style="display:none;">
+					<label for="reg_invite_code">Invitation code</label>
+					<input id="reg_invite_code" name="invite_code" type="text" autocomplete="one-time-code" placeholder="Optional unless invite-only is enabled" />
+					<small id="tvs-invite-validated" class="tvs-badge tvs-badge-accent" style="display:none;">Validated</small>
+					<small id="err_reg_invite_code" class="tvs-field-error"></small>
+				</div>
+				<div class="tvs-stack">
+					<label for="reg_username">Username</label>
+					<input id="reg_username" name="username" type="text" autocomplete="username" required />
+					<small id="err_reg_username" class="tvs-field-error"></small>
+				</div>
+				<div class="tvs-stack">
+					<label for="reg_email">Email</label>
+					<input id="reg_email" name="email" type="email" autocomplete="email" required />
+					<small id="err_reg_email" class="tvs-field-error"></small>
+				</div>
+				<div class="tvs-stack">
+					<label for="reg_password">Password</label>
+					<input id="reg_password" name="password" type="password" autocomplete="new-password" required />
+					<small class="tvs-hint">Min 10 chars, include lowercase, UPPERCASE and a special character.</small>
+					<small id="hint_reg_password_strength" class="tvs-password-strength"></small>
+					<small id="err_reg_password" class="tvs-field-error"></small>
+				</div>
+				<div class="tvs-stack">
+					<label for="reg_password2">Confirm password</label>
+					<input id="reg_password2" name="password2" type="password" autocomplete="new-password" required />
+					<small id="hint_reg_password_match" class="tvs-password-match"></small>
+					<small id="err_reg_password2" class="tvs-field-error"></small>
+				</div>
+				<div class="tvs-stack">
+					<label for="reg_first_name">First name</label>
+					<input id="reg_first_name" name="first_name" type="text" autocomplete="given-name" required />
+					<small id="err_reg_first_name" class="tvs-field-error"></small>
+				</div>
+				<div class="tvs-stack">
+					<label for="reg_last_name">Last name</label>
+					<input id="reg_last_name" name="last_name" type="text" autocomplete="family-name" required />
+					<small id="err_reg_last_name" class="tvs-field-error"></small>
+				</div>
+
+				<div class="tvs-stack">
+					<label class="tvs-text-sm">
+						<input type="checkbox" id="reg_accept_terms" name="accept_terms" required /> I agree to the 
+						<a class="tvs-badge tvs-badge-accent" href="/terms/" target="_blank" rel="noopener">Terms</a> and 
+						<a class="tvs-badge tvs-badge-accent" href="/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.
+					</label>
+				</div>
+				<div class="tvs-stack">
+					<label class="tvs-text-sm">
+						<input type="checkbox" id="reg_newsletter" name="newsletter" /> I want to receive the newsletter (optional)
+					</label>
+				</div>
+
+				<div class="tvs-stack">
+					<button type="submit" class="button tvs-btn tvs-btn--block" disabled>Create account</button>
+					<div id="tvs-register-status" class="tvs-status"></div>
+				</div>
+			</form>
+		</section>
+
+		<!-- Strava Registration/Login Panel -->
+		<section id="tvs-strava-panel" class="tvs-card tvs-glass tvs-stack">
+			<h2 class="tvs-text-primary">...or register with Strava</h2>
+			<div id="strava-connect-btn">
+				<p class="tvs-text-tertiary tvs-text-sm">Loading Strava button…</p>
+			</div>
+			<div id="strava-panel-status" class="tvs-status" style="min-height:1em;"></div>
+			<div id="strava-email-capture" style="display:none;" class="tvs-stack">
+				<p class="tvs-text-secondary tvs-text-sm">We need your email address to complete registration.</p>
+				<input id="strava_invite_code" type="text" placeholder="Invitation code (if required)" autocomplete="one-time-code" />
+				<input id="strava_email" type="email" placeholder="Your email" autocomplete="email" />
+				<label class="tvs-text-sm">
+					<input type="checkbox" id="strava_accept_terms" /> I agree to the 
+					<a class="tvs-badge tvs-badge-accent" href="/terms/" target="_blank" rel="noopener">Terms</a> and 
+					<a class="tvs-badge tvs-badge-accent" href="/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a>.
+				</label>
+				<label class="tvs-text-sm">
+					<input type="checkbox" id="strava_newsletter" /> I want to receive the newsletter (optional)
+				</label>
+				<div class="tvs-stack">
+					<button id="strava_complete_register" class="button tvs-btn tvs-btn--accent tvs-btn--block" disabled>Complete with Strava</button>
+					<div id="strava-register-status" class="tvs-status"></div>
+				</div>
+			</div>
+		</section>
+		</div>
+	</div>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer"} /-->
